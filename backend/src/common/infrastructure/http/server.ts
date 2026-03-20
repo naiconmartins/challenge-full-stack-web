@@ -1,7 +1,6 @@
+import { env } from "../env";
 import { app } from "./app";
 
-const PORT = process.env.PORT ?? 3333;
-
-app.listen(PORT, () => {
-  console.log(`Application successfully started on port ${PORT}`);
+app.listen(env.PORT, () => {
+  console.log(`Application successfully started on port ${env.PORT}`);
 });
