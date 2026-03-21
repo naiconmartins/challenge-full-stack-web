@@ -61,4 +61,21 @@ describe("CreateStudentUseCase Unit Tests", () => {
       }),
     ).rejects.toBeInstanceOf(ConflictError);
   });
+
+  it("should not be possible to register a student with the email of another student", async () => {
+    const props = {
+      ra: "20230001",
+      name: "Carlos Eduardo Silva",
+      email: "carlos.silva@aluno.edu.br",
+      cpf: "529.982.247-25",
+    };
+    await sut.execute(props);
+    await expect(
+      sut.execute({
+        ...props,
+        ra: "20230002",
+        cpf: "275.484.934-22",
+      }),
+    ).rejects.toBeInstanceOf(ConflictError);
+  });
 });
