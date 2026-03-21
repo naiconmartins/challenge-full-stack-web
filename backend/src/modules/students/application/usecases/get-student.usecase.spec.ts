@@ -1,0 +1,45 @@
+import "reflect-metadata";
+
+import { NotFoundError } from "@/common/domain/errors/not-found-error";
+import { StudentsRepository } from "@/modules/students/domain/repositories/students.repository";
+import { StudentsInMemoryRepository } from "@/modules/students/infraestructure/in-memory/repositories/students-in-memory.repository";
+import { GetStudentUseCase } from "./get-student.usecase";
+
+describe("GetStudentUseCase Unit Tests", () => {
+  let sut: GetStudentUseCase.UseCase;
+  let repository: StudentsRepository;
+
+  beforeEach(() => {
+    repository = new StudentsInMemoryRepository();
+    sut = new GetStudentUseCase.UseCase(repository);
+  });
+
+  it("should throw NotFoundError when student does not exist", async () => {
+    await expect(sut.execute({ id: "fake-id" })).rejects.toBeInstanceOf(
+      NotFoundError,
+    );
+  });
+
+  it("should return the student when found", async () => {
+    const spyFindById = jest.spyOn(repository, "findById");
+
+    const student = repository.create({
+      ra: "20230001",
+      name: "Carlos Eduardo Silva",
+      email: "carlos@aluno.edu.br",
+      cpf: "529.982.247-25",
+      created_by: null,
+      updated_by: null,
+    });
+    await repository.insert(student);
+
+    const result = await sut.execute({ id: student.id });
+
+    expect(result.id).toBe(student.id);
+    expect(result.ra).toBe(student.ra);
+    expect(result.name).toBe(student.name);
+    expect(result.email).toBe(student.email);
+    expect(result.cpf).toBe(student.cpf);
+    expect(spyFindById).toHaveBeenCalledTimes(1);
+  });
+});
