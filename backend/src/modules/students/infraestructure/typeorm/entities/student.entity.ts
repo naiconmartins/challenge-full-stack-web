@@ -12,7 +12,7 @@ export class Student implements StudentModel {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, update: false })
   ra: string;
 
   @Column()
@@ -21,7 +21,7 @@ export class Student implements StudentModel {
   @Column({ unique: true })
   email: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, update: false })
   cpf: string;
 
   @Column({ nullable: true })

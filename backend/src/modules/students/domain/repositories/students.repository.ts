@@ -19,4 +19,5 @@ export interface StudentsRepository extends RepositoryInterface<
 > {
   conflictingCpf(cpf: string): Promise<void>;
   conflictingRa(ra: string): Promise<void>;
+  conflictingEmail(email: string, excludeId?: string): Promise<void>;
 }

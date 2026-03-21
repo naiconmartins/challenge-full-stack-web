@@ -36,6 +36,13 @@ export class StudentsTypeormRepository implements StudentsRepository {
     }
   }
 
+  async conflictingEmail(email: string, excludeId?: string): Promise<void> {
+    const student = await this.studentsRepository.findOneBy({ email });
+    if (student && student.id !== excludeId) {
+      throw new ConflictError(`A student with this email already exists`);
+    }
+  }
+
   create(props: CreateStudentsProps): StudentModel {
     return this.studentsRepository.create(props);
   }
@@ -50,8 +57,7 @@ export class StudentsTypeormRepository implements StudentsRepository {
 
   async update(model: StudentModel): Promise<StudentModel> {
     await this._get(model.id);
-    await this.studentsRepository.update({ id: model.id }, model);
-    return model;
+    return this.studentsRepository.save(model);
   }
 
   async delete(id: string): Promise<void> {

@@ -1,6 +1,7 @@
 import { dataSource } from "@/common/infrastructure/typeorm";
 import { container } from "tsyringe";
 import { CreateStudentUseCase } from "../../application/usecases/create-student.usecase";
+import { UpdateStudentUseCase } from "../../application/usecases/update-student.usecase";
 import { Student } from "../typeorm/entities/student.entity";
 import { StudentsTypeormRepository } from "../typeorm/repositories/students-typeorm.repository";
 
@@ -14,4 +15,9 @@ container.registerSingleton("StudentRepository", StudentsTypeormRepository);
 container.registerSingleton(
   "CreateStudentUseCase",
   CreateStudentUseCase.UseCase,
+);
+
+container.registerSingleton(
+  "UpdateStudentUseCase",
+  UpdateStudentUseCase.UseCase,
 );

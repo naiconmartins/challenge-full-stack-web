@@ -21,6 +21,13 @@ export class StudentsInMemoryRepository
     }
   }
 
+  async conflictingEmail(email: string, excludeId?: string): Promise<void> {
+    const student = this.items.find(item => item.email === email);
+    if (student && student.id !== excludeId) {
+      throw new ConflictError(`A student with this email already exists`);
+    }
+  }
+
   protected async applyFilter(
     items: StudentModel[],
     filter: string | null,
