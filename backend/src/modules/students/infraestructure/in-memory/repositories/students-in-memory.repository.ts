@@ -7,6 +7,8 @@ export class StudentsInMemoryRepository
   extends InMemoryRepository<StudentModel>
   implements StudentsRepository
 {
+  sortableFields: string[] = ["name", "created_at"];
+
   async conflictingCpf(cpf: string): Promise<void> {
     const student = this.items.find(item => item.cpf === cpf);
     if (student) {
