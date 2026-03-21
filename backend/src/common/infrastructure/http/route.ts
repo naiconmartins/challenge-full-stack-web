@@ -1,3 +1,8 @@
-import { Router, IRouter } from "express";
+import { studentsRouter } from "@/modules/students/infraestructure/http/routes/students.route";
+import { IRouter, Router } from "express";
 
-export const router: IRouter = Router();
+const router: IRouter = Router();
+
+router.use("/students", studentsRouter);
+
+export { router };

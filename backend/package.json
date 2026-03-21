@@ -7,7 +7,7 @@
     "dev": "npx dotenv-cli -e .env -- ts-node-dev -r tsconfig-paths/register --inspect --transpile-only --ignore-watch node_modules src/common/infrastructure/http/server.ts",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "test": "npx dotenv-cli -e .env.test -- jest --runInBand",
+    "test": "pnpx dotenv-cli -e .env.test -- jest --runInBand",
     "typeorm": "ts-node-dev -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "migration:run": "pnpm typeorm migration:run -d ./src/common/infrastructure/typeorm/index.ts"
   },
@@ -17,17 +17,19 @@
   "packageManager": "pnpm@10.15.1",
   "dependencies": {
     "class-transformer": "^0.5.1",
+    "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
-    "express-async-errors": "^3.1.1",
     "multer": "^2.1.1",
     "pg": "^8.20.0",
     "reflect-metadata": "^0.2.2",
+    "tsyringe": "^4.10.0",
     "typeorm": "^0.3.28",
     "zod": "^4.3.6"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
     "@types/multer": "^2.1.0",

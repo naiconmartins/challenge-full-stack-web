@@ -1,4 +1,4 @@
-export interface StudentModel {
+export type StudentOutput = {
   id: string;
   ra: string;
   name: string;
@@ -8,4 +8,4 @@ export interface StudentModel {
   updated_by: string | null;
   created_at: Date;
   updated_at: Date;
-}
+};

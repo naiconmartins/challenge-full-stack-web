@@ -1,4 +1,4 @@
-import { AppError } from "@/common/domain/errors/app-error";
+import { ValidationError } from "@/common/domain/errors/validation-error";
 
 /**
  * @param schema object with the Zod validation schema
@@ -9,11 +9,11 @@ export function dataValidation(schema: any, data: any) {
   const validatedData = schema.safeParse(data);
 
   if (validatedData.success === false) {
-    console.error("Invalid data", validatedData.error.format());
-    throw new AppError(
-      `${validatedData.error.errors.map(err => {
-        return `${err.path} -> ${err.message}`;
-      })}`,
+    throw new ValidationError(
+      validatedData.error.issues.map((err: any) => ({
+        field: err.path.join("."),
+        message: err.message,
+      })),
     );
   }
   return validatedData.data;
