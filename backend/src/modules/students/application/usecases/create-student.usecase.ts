@@ -22,6 +22,7 @@ export namespace CreateStudentUseCase {
     async execute(input: Input): Promise<Output> {
       await this.studentsRepository.conflictingCpf(input.cpf);
       await this.studentsRepository.conflictingRa(input.ra);
+      await this.studentsRepository.conflictingEmail(input.email);
 
       const student = this.studentsRepository.create({
         ...input,
