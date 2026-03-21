@@ -18,5 +18,5 @@ export const updateStudentBodySchema = z.object({
 });
 
 export const updateStudentParamSchema = z.object({
-  id: z.string({ error: "Id is required" }),
+  id: z.uuid({ error: "Id must be a valid UUID" }),
 });
