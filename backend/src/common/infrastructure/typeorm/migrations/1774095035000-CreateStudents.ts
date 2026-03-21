@@ -7,10 +7,6 @@ import {
 
 export class CreateStudents1774095035000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(
-      `CREATE SEQUENCE IF NOT EXISTS students_ra_seq START WITH 100 INCREMENT BY 1`,
-    );
-
     await queryRunner.createTable(
       new Table({
         name: "students",
@@ -24,8 +20,7 @@ export class CreateStudents1774095035000 implements MigrationInterface {
           },
           {
             name: "ra",
-            type: "varchar",
-            length: "20",
+            type: "bigint",
             isUnique: true,
             isNullable: false,
           },
@@ -89,6 +84,11 @@ export class CreateStudents1774095035000 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
+    const table = await queryRunner.getTable("students");
+    const fks = table!.foreignKeys;
+    for (const fk of fks) {
+      await queryRunner.dropForeignKey("students", fk);
+    }
     await queryRunner.dropTable("students");
     await queryRunner.query(`DROP SEQUENCE IF EXISTS students_ra_seq`);
   }
