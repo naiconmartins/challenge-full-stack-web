@@ -1,6 +1,7 @@
 import { dataSource } from "@/common/infrastructure/typeorm";
 import { container } from "tsyringe";
 import { CreateStudentUseCase } from "../../application/usecases/create-student.usecase";
+import { DeleteStudentUseCase } from "../../application/usecases/delete-student.usecase";
 import { GetStudentUseCase } from "../../application/usecases/get-student.usecase";
 import { SearchStudentUseCase } from "../../application/usecases/search-student.usecase";
 import { UpdateStudentUseCase } from "../../application/usecases/update-student.usecase";
@@ -25,6 +26,11 @@ container.registerSingleton(
 );
 
 container.registerSingleton("GetStudentUseCase", GetStudentUseCase.UseCase);
+
+container.registerSingleton(
+  "DeleteStudentUseCase",
+  DeleteStudentUseCase.UseCase,
+);
 
 container.registerSingleton(
   "SearchStudentUseCase",
