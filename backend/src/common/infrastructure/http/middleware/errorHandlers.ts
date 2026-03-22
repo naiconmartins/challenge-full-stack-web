@@ -10,7 +10,6 @@ export function errorHandler(
 ): Response {
   if (err instanceof ValidationError) {
     return res.status(err.statusCode).json({
-      status: "error",
       message: err.message,
       errors: [err.errors[0]],
     });
@@ -18,7 +17,6 @@ export function errorHandler(
 
   if (err instanceof AppError) {
     return res.status(err.statusCode).json({
-      status: "error",
       message: err.message,
     });
   }
@@ -27,5 +25,5 @@ export function errorHandler(
 
   return res
     .status(500)
-    .json({ status: "error", message: "Internal Server Error" });
+    .json({ message: "Internal Server Error" });
 }
