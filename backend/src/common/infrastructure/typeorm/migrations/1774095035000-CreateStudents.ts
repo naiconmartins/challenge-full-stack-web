@@ -20,7 +20,7 @@ export class CreateStudents1774095035000 implements MigrationInterface {
           },
           {
             name: "ra",
-            type: "bigint",
+            type: "varchar",
             isUnique: true,
             isNullable: false,
           },
@@ -90,6 +90,5 @@ export class CreateStudents1774095035000 implements MigrationInterface {
       await queryRunner.dropForeignKey("students", fk);
     }
     await queryRunner.dropTable("students");
-    await queryRunner.query(`DROP SEQUENCE IF EXISTS students_ra_seq`);
   }
 }
