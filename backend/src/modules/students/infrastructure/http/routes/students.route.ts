@@ -1,3 +1,4 @@
+import { isAuthenticated } from "@/common/infrastructure/http/middleware/isAuthenticated";
 import { Router } from "express";
 import { createStudentController } from "../controllers/create-student.controller";
 import { deleteStudentController } from "../controllers/delete-student.controller";
@@ -7,10 +8,10 @@ import { updateStudentController } from "../controllers/update-student.controlle
 
 const studentsRouter: Router = Router();
 
-studentsRouter.post("/", createStudentController);
-studentsRouter.put("/:id", updateStudentController);
-studentsRouter.get("/", searchStudentController);
-studentsRouter.get("/:id", getStudentController);
-studentsRouter.delete("/:id", deleteStudentController);
+studentsRouter.post("/", isAuthenticated, createStudentController);
+studentsRouter.put("/:id", isAuthenticated, updateStudentController);
+studentsRouter.get("/", isAuthenticated, searchStudentController);
+studentsRouter.get("/:id", isAuthenticated, getStudentController);
+studentsRouter.delete("/:id", isAuthenticated, deleteStudentController);
 
 export { studentsRouter };
