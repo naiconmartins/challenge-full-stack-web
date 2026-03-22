@@ -42,6 +42,21 @@
         </template>
       </v-list-item>
     </v-list>
+
+    <template #append>
+      <v-list nav density="compact" class="bg-[#1B2731] mb-2">
+        <v-list-item
+          prepend-icon="mdi-logout"
+          rounded="lg"
+          class="text-white"
+          @click="handleLogout"
+        >
+          <template #title>
+            <span class="text-base">Sair</span>
+          </template>
+        </v-list-item>
+      </v-list>
+    </template>
   </v-navigation-drawer>
 
   <v-app-bar v-if="isMobile" flat color="white" class="border-b border-slate-200">
@@ -54,10 +69,19 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { useDisplay } from 'vuetify'
+import { useAuthStore } from '@/stores/auth.store'
 
 const { mobile: isMobile } = useDisplay()
+const router = useRouter()
+const authStore = useAuthStore()
 
 const drawer = ref(true)
 const rail = ref(false)
+
+function handleLogout(): void {
+  authStore.logout()
+  router.push({ name: 'login' })
+}
 </script>

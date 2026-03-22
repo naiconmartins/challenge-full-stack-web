@@ -21,6 +21,9 @@ const fallbackMessages: Record<number, string> = {
 
 const apiMessageTranslations: Record<string, string> = {
   'Invalid credentials': 'Credenciais inválidas. Verifique seu e-mail e senha.',
+  'A student with this CPF already exists': 'Já existe um aluno cadastrado com este CPF.',
+  'A student with this RA already exists': 'Já existe um aluno cadastrado com este RA.',
+  'A student with this email already exists': 'Já existe um aluno cadastrado com este e-mail.',
 }
 
 function resolveMessage(status: number, apiMessage?: string): string {

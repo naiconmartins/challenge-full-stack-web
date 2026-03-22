@@ -16,6 +16,18 @@ const router = createRouter({
       component: () => import('@/views/HomeView.vue'),
       meta: { requiresAuth: true },
     },
+    {
+      path: '/students/create',
+      name: 'student-create',
+      component: () => import('@/views/StudentFormView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/students/:id/edit',
+      name: 'student-edit',
+      component: () => import('@/views/StudentFormView.vue'),
+      meta: { requiresAuth: true },
+    },
   ],
 })
 
