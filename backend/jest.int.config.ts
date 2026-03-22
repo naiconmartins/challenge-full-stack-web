@@ -1,11 +1,8 @@
-import { pathsToModuleNameMapper } from "ts-jest";
-import { compilerOptions } from "./tsconfig.json";
-
 export default {
   moduleFileExtensions: ["ts", "js", "json"],
-  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
-    prefix: "<rootDir>/",
-  }),
+  moduleNameMapper: {
+    "^@/(.*)$": "<rootDir>/src/$1",
+  },
   testRegex: ".*\\.int-spec\\.ts$",
   transform: {
     "^.+\\.(t|j)s$": "ts-jest",
@@ -13,4 +10,5 @@ export default {
   collectCoverageFrom: ["**/*.(t|j)s"],
   coverageDirectory: "../coverage",
   testEnvironment: "node",
+  setupFiles: ["<rootDir>/jest.int-setup.ts"],
 };
