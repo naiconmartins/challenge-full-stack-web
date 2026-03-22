@@ -41,7 +41,7 @@ export abstract class InMemoryRepository<
   }
 
   async update(model: Model): Promise<Model> {
-    await this._get(model.id);
+    await this._get(model.id!);
     const index = this.items.findIndex(item => item.id === model.id);
     this.items[index] = model;
     return model;

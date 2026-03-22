@@ -66,35 +66,40 @@ export class StudentsTypeormRepository implements StudentsRepository {
   }
 
   async search(props: SearchInput): Promise<SearchOutput<StudentModel>> {
-    const validSort = this.sortableFields.includes(props.sort) || false;
+    const page = props.page ?? 1;
+    const per_page = props.per_page ?? 15;
+    const sort = props.sort ?? null;
+    const sort_dir = props.sort_dir ?? null;
+    const filter = props.filter ?? null;
+
     const dirOps = ["asc", "desc"];
+    const validSort = sort !== null && this.sortableFields.includes(sort);
     const validSortDir =
-      (props.sort_dir && dirOps.includes(props.sort_dir.toLowerCase())) ||
-      false;
-    const orderByField = validSort ? props.sort : "created_at";
-    const orderByDir = validSortDir ? props.sort_dir : "desc";
+      sort_dir !== null && dirOps.includes(sort_dir.toLowerCase());
+    const orderByField = validSort ? sort : "created_at";
+    const orderByDir = validSortDir ? sort_dir : "desc";
 
     const [students, total] = await this.studentsRepository.findAndCount({
-      ...(props.filter && {
+      ...(filter && {
         where: [
-          { name: ILike(`%${props.filter}%`) },
-          { ra: ILike(`%${props.filter}%`) },
-          { cpf: ILike(`%${props.filter}%`) },
+          { name: ILike(`%${filter}%`) },
+          { ra: ILike(`%${filter}%`) },
+          { cpf: ILike(`%${filter}%`) },
         ],
       }),
       order: { [orderByField]: orderByDir },
-      skip: (props.page - 1) * props.per_page,
-      take: props.per_page,
+      skip: (page - 1) * per_page,
+      take: per_page,
     });
 
     return {
       items: students,
-      per_page: props.per_page,
+      per_page,
       total,
-      current_page: props.page,
+      current_page: page,
       sort: orderByField,
       sort_dir: orderByDir,
-      filter: props.filter,
+      filter,
     };
   }
 
