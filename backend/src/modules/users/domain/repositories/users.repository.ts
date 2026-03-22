@@ -12,4 +12,5 @@ export interface UsersRepository extends RepositoryInterface<
   CreateUserProps
 > {
   findByEmail(email: string): Promise<UserModel>;
+  conflictingEmail(email: string): Promise<void>;
 }
