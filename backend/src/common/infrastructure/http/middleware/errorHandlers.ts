@@ -1,7 +1,6 @@
 import { AppError } from "@/common/domain/errors/app-error";
 import { ValidationError } from "@/common/domain/errors/validation-error";
 import { NextFunction, Request, Response } from "express";
-import { MulterError } from "multer";
 
 export function errorHandler(
   err: Error,
@@ -19,13 +18,6 @@ export function errorHandler(
 
   if (err instanceof AppError) {
     return res.status(err.statusCode).json({
-      status: "error",
-      message: err.message,
-    });
-  }
-
-  if (err instanceof MulterError) {
-    return res.status(400).json({
       status: "error",
       message: err.message,
     });
