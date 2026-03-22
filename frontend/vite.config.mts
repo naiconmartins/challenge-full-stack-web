@@ -2,7 +2,7 @@ import { fileURLToPath, URL } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
 import Vue from '@vitejs/plugin-vue'
 import Fonts from 'unplugin-fonts/vite'
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vitest/config'
 import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 
 // https://vitejs.dev/config/
@@ -52,5 +52,12 @@ export default defineConfig({
   },
   server: {
     port: 3000,
+  },
+  test: {
+    environment: 'happy-dom',
+    globals: true,
+    typecheck: {
+      tsconfig: './tsconfig.vitest.json',
+    },
   },
 })
