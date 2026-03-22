@@ -39,8 +39,8 @@ export class StudentsInMemoryRepository
     return items.filter(
       item =>
         item.name.toLowerCase().includes(lower) ||
-        item.ra.includes(filter) ||
-        item.cpf.includes(filter),
+        item.ra.toLowerCase().includes(lower) ||
+        item.cpf.toLowerCase().includes(lower),
     );
   }
 }
