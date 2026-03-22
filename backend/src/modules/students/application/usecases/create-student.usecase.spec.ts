@@ -1,6 +1,6 @@
 import "reflect-metadata";
 
-import { ConflictError } from "@/common/domain/errors/conflit-error";
+import { ConflictError } from "@/common/domain/errors/conflict-error";
 import { StudentsRepository } from "@/modules/students/domain/repositories/students.repository";
 import { StudentsInMemoryRepository } from "@/modules/students/infrastructure/in-memory/repositories/students-in-memory.repository";
 import { CreateStudentUseCase } from "./create-student.usecase";

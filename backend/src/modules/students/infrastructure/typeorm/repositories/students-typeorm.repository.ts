@@ -1,4 +1,4 @@
-import { ConflictError } from "@/common/domain/errors/conflit-error";
+import { ConflictError } from "@/common/domain/errors/conflict-error";
 import { NotFoundError } from "@/common/domain/errors/not-found-error";
 import {
   SearchInput,

@@ -1,4 +1,4 @@
-import { ConflictError } from "@/common/domain/errors/conflit-error";
+import { ConflictError } from "@/common/domain/errors/conflict-error";
 import { InMemoryRepository } from "@/common/domain/repositories/in-memory.repository";
 import { StudentModel } from "@/modules/students/domain/models/student.model";
 import { StudentsRepository } from "@/modules/students/domain/repositories/students.repository";
