@@ -1,6 +1,7 @@
 import "reflect-metadata";
 
 import { StudentsInMemoryRepository } from "@/modules/students/infrastructure/in-memory/repositories/students-in-memory.repository";
+import { StudentsDataBuilder } from "@/modules/students/testing/helpers/students-data-builder";
 import { SearchStudentUseCase } from "./search-student.usecase";
 
 describe("SearchStudentUseCase Unit Tests", () => {
@@ -15,33 +16,17 @@ describe("SearchStudentUseCase Unit Tests", () => {
   it("should return all students with default pagination when no params are given", async () => {
     const created_at = new Date();
     const items = [
-      repository.create({
-        ra: "20230001",
-        name: "Alice Costa",
-        email: "alice@aluno.edu.br",
-        cpf: "111.222.333-44",
-        created_by: null,
-        updated_by: null,
-        created_at,
-      }),
-      repository.create({
-        ra: "20230002",
-        name: "Bruno Melo",
-        email: "bruno@aluno.edu.br",
-        cpf: "222.333.444-55",
-        created_by: null,
-        updated_by: null,
-        created_at: new Date(created_at.getTime() + 100),
-      }),
-      repository.create({
-        ra: "20230003",
-        name: "Carlos Nunes",
-        email: "carlos@aluno.edu.br",
-        cpf: "333.444.555-66",
-        created_by: null,
-        updated_by: null,
-        created_at: new Date(created_at.getTime() + 200),
-      }),
+      repository.create(StudentsDataBuilder({ created_at })),
+      repository.create(
+        StudentsDataBuilder({
+          created_at: new Date(created_at.getTime() + 100),
+        }),
+      ),
+      repository.create(
+        StudentsDataBuilder({
+          created_at: new Date(created_at.getTime() + 200),
+        }),
+      ),
     ];
     repository.items = items;
 
@@ -58,46 +43,46 @@ describe("SearchStudentUseCase Unit Tests", () => {
 
   it("should return output using pagination and filter by name", async () => {
     const items = [
-      repository.create({
-        ra: "20230001",
-        name: "Ana Costa",
-        email: "ana@aluno.edu.br",
-        cpf: "111",
-        created_by: null,
-        updated_by: null,
-      }),
-      repository.create({
-        ra: "20230002",
-        name: "Ana Lima",
-        email: "ana2@aluno.edu.br",
-        cpf: "222",
-        created_by: null,
-        updated_by: null,
-      }),
-      repository.create({
-        ra: "20230003",
-        name: "Ana Paula",
-        email: "ana3@aluno.edu.br",
-        cpf: "333",
-        created_by: null,
-        updated_by: null,
-      }),
-      repository.create({
-        ra: "20230004",
-        name: "Bruno Melo",
-        email: "bruno@aluno.edu.br",
-        cpf: "444",
-        created_by: null,
-        updated_by: null,
-      }),
-      repository.create({
-        ra: "20230005",
-        name: "Carlos Dumont",
-        email: "carlos@aluno.edu.br",
-        cpf: "555",
-        created_by: null,
-        updated_by: null,
-      }),
+      repository.create(
+        StudentsDataBuilder({
+          ra: "20230001",
+          name: "Ana Costa",
+          email: "ana@aluno.edu.br",
+          cpf: "416.417.200-26",
+        }),
+      ),
+      repository.create(
+        StudentsDataBuilder({
+          ra: "20230002",
+          name: "Ana Lima",
+          email: "ana2@aluno.edu.br",
+          cpf: "308.307.270-86",
+        }),
+      ),
+      repository.create(
+        StudentsDataBuilder({
+          ra: "20230003",
+          name: "Ana Paula",
+          email: "ana3@aluno.edu.br",
+          cpf: "275.484.934-22",
+        }),
+      ),
+      repository.create(
+        StudentsDataBuilder({
+          ra: "20230004",
+          name: "Bruno Melo",
+          email: "bruno@aluno.edu.br",
+          cpf: "529.982.247-25",
+        }),
+      ),
+      repository.create(
+        StudentsDataBuilder({
+          ra: "20230005",
+          name: "Carlos Dumont",
+          email: "carlos@aluno.edu.br",
+          cpf: "714.604.110-25",
+        }),
+      ),
     ];
     repository.items = items;
 
@@ -124,30 +109,30 @@ describe("SearchStudentUseCase Unit Tests", () => {
 
   it("should return output sorted by name asc and desc", async () => {
     const items = [
-      repository.create({
-        ra: "20230001",
-        name: "c",
-        email: "c@aluno.edu.br",
-        cpf: "111",
-        created_by: null,
-        updated_by: null,
-      }),
-      repository.create({
-        ra: "20230002",
-        name: "a",
-        email: "a@aluno.edu.br",
-        cpf: "222",
-        created_by: null,
-        updated_by: null,
-      }),
-      repository.create({
-        ra: "20230003",
-        name: "b",
-        email: "b@aluno.edu.br",
-        cpf: "333",
-        created_by: null,
-        updated_by: null,
-      }),
+      repository.create(
+        StudentsDataBuilder({
+          ra: "20230001",
+          name: "c",
+          email: "c@aluno.edu.br",
+          cpf: "416.417.200-26",
+        }),
+      ),
+      repository.create(
+        StudentsDataBuilder({
+          ra: "20230002",
+          name: "a",
+          email: "a@aluno.edu.br",
+          cpf: "308.307.270-86",
+        }),
+      ),
+      repository.create(
+        StudentsDataBuilder({
+          ra: "20230003",
+          name: "b",
+          email: "b@aluno.edu.br",
+          cpf: "275.484.934-22",
+        }),
+      ),
     ];
     repository.items = items;
 
@@ -174,30 +159,15 @@ describe("SearchStudentUseCase Unit Tests", () => {
 
   it("should filter students by RA", async () => {
     const items = [
-      repository.create({
-        ra: "20230001",
-        name: "Alice Costa",
-        email: "alice@aluno.edu.br",
-        cpf: "111",
-        created_by: null,
-        updated_by: null,
-      }),
-      repository.create({
-        ra: "20240001",
-        name: "Bruno Melo",
-        email: "bruno@aluno.edu.br",
-        cpf: "222",
-        created_by: null,
-        updated_by: null,
-      }),
-      repository.create({
-        ra: "20240002",
-        name: "Carlos Nunes",
-        email: "carlos@aluno.edu.br",
-        cpf: "333",
-        created_by: null,
-        updated_by: null,
-      }),
+      repository.create(
+        StudentsDataBuilder({ ra: "20230001", cpf: "416.417.200-26" }),
+      ),
+      repository.create(
+        StudentsDataBuilder({ ra: "20240001", cpf: "308.307.270-86" }),
+      ),
+      repository.create(
+        StudentsDataBuilder({ ra: "20240002", cpf: "275.484.934-22" }),
+      ),
     ];
     repository.items = items;
 
@@ -213,16 +183,7 @@ describe("SearchStudentUseCase Unit Tests", () => {
   });
 
   it("should return empty items when filter matches no student", async () => {
-    const items = [
-      repository.create({
-        ra: "20230001",
-        name: "Alice Costa",
-        email: "alice@aluno.edu.br",
-        cpf: "111",
-        created_by: null,
-        updated_by: null,
-      }),
-    ];
+    const items = [repository.create(StudentsDataBuilder({}))];
     repository.items = items;
 
     const result = await sut.execute({ filter: "xyz" });

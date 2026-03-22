@@ -3,6 +3,7 @@ import "reflect-metadata";
 import { ConflictError } from "@/common/domain/errors/conflict-error";
 import { StudentsRepository } from "@/modules/students/domain/repositories/students.repository";
 import { StudentsInMemoryRepository } from "@/modules/students/infrastructure/in-memory/repositories/students-in-memory.repository";
+import { StudentsDataBuilder } from "@/modules/students/testing/helpers/students-data-builder";
 import { CreateStudentUseCase } from "./create-student.usecase";
 
 describe("CreateStudentUseCase Unit Tests", () => {
@@ -17,10 +18,8 @@ describe("CreateStudentUseCase Unit Tests", () => {
   it("should create a student", async () => {
     const spyInsert = jest.spyOn(repository, "insert");
     const props = {
-      ra: "20230001",
-      name: "Carlos Eduardo Silva",
-      email: "carlos.silva@aluno.edu.br",
-      cpf: "529.982.247-25",
+      ...StudentsDataBuilder({}),
+      created_by: "user-id-1",
     };
     const result = await sut.execute(props);
     expect(result.id).toBeDefined();
@@ -33,48 +32,33 @@ describe("CreateStudentUseCase Unit Tests", () => {
   });
 
   it("should not be possible to register a student with the CPF of another student", async () => {
-    const props = {
-      ra: "20230001",
-      name: "Carlos Eduardo Silva",
-      email: "carlos.silva@aluno.edu.br",
-      cpf: "529.982.247-25",
-    };
+    const props = { ...StudentsDataBuilder({}), created_by: "user-id-1" };
     await sut.execute(props);
     await expect(
-      sut.execute({ ...props, ra: "20230002", email: "outro@aluno.edu.br" }),
+      sut.execute({ ...props, ra: "99990001", email: "outro@aluno.edu.br" }),
     ).rejects.toBeInstanceOf(ConflictError);
   });
 
   it("should not be possible to register a student with the RA of another student", async () => {
-    const props = {
-      ra: "20230001",
-      name: "Carlos Eduardo Silva",
-      email: "carlos.silva@aluno.edu.br",
-      cpf: "529.982.247-25",
-    };
+    const props = { ...StudentsDataBuilder({}), created_by: "user-id-1" };
     await sut.execute(props);
     await expect(
       sut.execute({
-        ...props,
-        cpf: "275.484.934-22",
-        email: "outro@aluno.edu.br",
+        ...StudentsDataBuilder({}),
+        ra: props.ra,
+        created_by: "user-id-1",
       }),
     ).rejects.toBeInstanceOf(ConflictError);
   });
 
   it("should not be possible to register a student with the email of another student", async () => {
-    const props = {
-      ra: "20230001",
-      name: "Carlos Eduardo Silva",
-      email: "carlos.silva@aluno.edu.br",
-      cpf: "529.982.247-25",
-    };
+    const props = { ...StudentsDataBuilder({}), created_by: "user-id-1" };
     await sut.execute(props);
     await expect(
       sut.execute({
-        ...props,
-        ra: "20230002",
-        cpf: "275.484.934-22",
+        ...StudentsDataBuilder({}),
+        email: props.email,
+        created_by: "user-id-1",
       }),
     ).rejects.toBeInstanceOf(ConflictError);
   });

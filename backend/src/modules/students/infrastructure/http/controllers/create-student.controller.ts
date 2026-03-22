@@ -14,7 +14,10 @@ export async function createStudentController(
     "CreateStudentUseCase",
   );
 
-  const student = await createStudentUseCase.execute(input);
+  const student = await createStudentUseCase.execute({
+    ...input,
+    created_by: request.user.id,
+  });
 
   return response.status(201).json(student);
 }

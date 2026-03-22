@@ -3,6 +3,7 @@ import "reflect-metadata";
 import { NotFoundError } from "@/common/domain/errors/not-found-error";
 import { StudentsRepository } from "@/modules/students/domain/repositories/students.repository";
 import { StudentsInMemoryRepository } from "@/modules/students/infrastructure/in-memory/repositories/students-in-memory.repository";
+import { StudentsDataBuilder } from "@/modules/students/testing/helpers/students-data-builder";
 import { GetStudentUseCase } from "./get-student.usecase";
 
 describe("GetStudentUseCase Unit Tests", () => {
@@ -15,7 +16,7 @@ describe("GetStudentUseCase Unit Tests", () => {
   });
 
   it("should throw NotFoundError when student does not exist", async () => {
-    await expect(sut.execute({ id: "fake-id" })).rejects.toBeInstanceOf(
+    await expect(sut.execute({ id: "id-inexistente" })).rejects.toBeInstanceOf(
       NotFoundError,
     );
   });
@@ -23,14 +24,7 @@ describe("GetStudentUseCase Unit Tests", () => {
   it("should return the student when found", async () => {
     const spyFindById = jest.spyOn(repository, "findById");
 
-    const student = repository.create({
-      ra: "20230001",
-      name: "Carlos Eduardo Silva",
-      email: "carlos@aluno.edu.br",
-      cpf: "529.982.247-25",
-      created_by: null,
-      updated_by: null,
-    });
+    const student = repository.create(StudentsDataBuilder({}));
     await repository.insert(student);
 
     const result = await sut.execute({ id: student.id });

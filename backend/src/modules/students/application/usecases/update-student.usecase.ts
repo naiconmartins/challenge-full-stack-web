@@ -7,6 +7,7 @@ export namespace UpdateStudentUseCase {
     id: string;
     name: string;
     email: string;
+    updated_by: string;
   };
 
   export type Output = StudentOutput;
@@ -25,6 +26,7 @@ export namespace UpdateStudentUseCase {
 
       student.name = input.name;
       student.email = input.email;
+      student.updated_by = input.updated_by;
 
       const updatedStudent: StudentOutput =
         await this.studentsRepository.update(student);

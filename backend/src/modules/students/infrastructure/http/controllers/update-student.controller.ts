@@ -19,7 +19,11 @@ export async function updateStudentController(
     "UpdateStudentUseCase",
   );
 
-  const student = await updateStudentUseCase.execute({ ...id, ...input });
+  const student = await updateStudentUseCase.execute({
+    ...id,
+    ...input,
+    updated_by: request.user.id,
+  });
 
   return response.status(200).json(student);
 }

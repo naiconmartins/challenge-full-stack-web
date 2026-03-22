@@ -8,6 +8,7 @@ export namespace CreateStudentUseCase {
     name: string;
     email: string;
     cpf: string;
+    created_by: string;
   };
 
   export type Output = StudentOutput;
@@ -26,7 +27,6 @@ export namespace CreateStudentUseCase {
 
       const student = this.studentsRepository.create({
         ...input,
-        created_by: null,
         updated_by: null,
       });
       const createdStudent: StudentOutput =
