@@ -24,10 +24,10 @@ export class Student implements StudentModel {
   @Column({ unique: true, update: false })
   cpf: string;
 
-  @Column({ nullable: true })
+  @Column({ type: "varchar", nullable: true })
   created_by: string | null;
 
-  @Column({ nullable: true })
+  @Column({ type: "varchar", nullable: true })
   updated_by: string | null;
 
   // @ManyToOne(() => User, { nullable: true })
