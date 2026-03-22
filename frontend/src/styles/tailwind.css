@@ -3,8 +3,8 @@
 @import "tailwindcss/utilities" layer(tailwind-utilities);
 
 @theme {
-  --font-heading: "Roboto", sans-serif;
-  --font-body: "Roboto", sans-serif;
+  --font-heading: "Poppins", sans-serif;
+  --font-body: "Poppins", sans-serif;
   --font-mono: "Roboto Mono", monospace;
 
   --color-background: rgb(var(--v-theme-background));

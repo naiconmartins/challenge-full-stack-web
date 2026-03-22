@@ -1,0 +1,63 @@
+<template>
+  <v-navigation-drawer
+    v-model="drawer"
+    :rail="rail"
+    :temporary="isMobile"
+    :permanent="!isMobile"
+    color="#1B2731"
+  >
+    <div class="flex items-center justify-between px-4 py-4">
+      <span v-if="!rail" class="text-white text-base font-semibold tracking-wide">
+        Módulo Acadêmico
+      </span>
+      <v-btn
+        v-if="!isMobile"
+        :icon="rail ? 'mdi-chevron-right' : 'mdi-chevron-left'"
+        variant="text"
+        size="small"
+        @click="rail = !rail"
+      />
+      <v-btn
+        v-else
+        icon="mdi-close"
+        variant="text"
+        color="slate"
+        size="small"
+        @click="drawer = false"
+      />
+    </div>
+
+    <v-list nav density="compact" class="mt-2 bg-[#1B2731]">
+      <v-list-item
+        :to="{ name: 'home' }"
+        prepend-icon="mdi-account-group-outline"
+        value="students"
+        active-color="white"
+        rounded="lg"
+        class="text-white"
+        @click="isMobile && (drawer = false)"
+      >
+        <template #title>
+          <span class="text-base">Alunos</span>
+        </template>
+      </v-list-item>
+    </v-list>
+  </v-navigation-drawer>
+
+  <v-app-bar v-if="isMobile" flat color="white" class="border-b border-slate-200">
+    <v-app-bar-nav-icon @click="drawer = !drawer" />
+    <v-toolbar-title class="text-slate-900 text-base font-semibold">
+      Módulo Acadêmico
+    </v-toolbar-title>
+  </v-app-bar>
+</template>
+
+<script lang="ts" setup>
+import { ref } from 'vue'
+import { useDisplay } from 'vuetify'
+
+const { mobile: isMobile } = useDisplay()
+
+const drawer = ref(true)
+const rail = ref(false)
+</script>

@@ -5,7 +5,7 @@ import 'vuetify/styles'
 
 export default createVuetify({
   theme: {
-    defaultTheme: 'system',
+    defaultTheme: 'light',
     utilities: false,
   },
   display: {
