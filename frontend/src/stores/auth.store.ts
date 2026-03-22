@@ -6,14 +6,15 @@ import { setAuthToken, clearAuthToken } from '@/infrastructure/http/http-client'
 import type { LoginCredentials } from '@/domain/entities/auth.entity'
 import { AppError } from '@/domain/errors/app.error'
 
-const authRepository = new AuthRepositoryImpl()
-const loginUseCase = new LoginUseCase(authRepository)
-
 export const useAuthStore = defineStore('auth', () => {
+  const authRepository = new AuthRepositoryImpl()
+  const loginUseCase = new LoginUseCase(authRepository)
+
+  const token = ref<string | null>(localStorage.getItem('access_token'))
   const isLoading = ref(false)
   const error = ref<AppError | null>(null)
 
-  const isAuthenticated = computed(() => !!localStorage.getItem('access_token'))
+  const isAuthenticated = computed(() => !!token.value)
 
   async function login(credentials: LoginCredentials): Promise<void> {
     isLoading.value = true
@@ -21,6 +22,7 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const { access_token } = await loginUseCase.execute(credentials)
       setAuthToken(access_token)
+      token.value = access_token
     } catch (err) {
       error.value = AppError.isAppError(err) ? err : new AppError('Erro inesperado.', 0)
       throw error.value
@@ -31,6 +33,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   function logout(): void {
     clearAuthToken()
+    token.value = null
   }
 
   return { isLoading, error, isAuthenticated, login, logout }

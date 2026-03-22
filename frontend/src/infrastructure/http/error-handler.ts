@@ -12,14 +12,20 @@ function resolveErrorCode(status: number): AppErrorCode {
   return 'UNKNOWN_ERROR'
 }
 
-function resolveMessage(status: number, fallback: string): string {
-  const messages: Record<number, string> = {
-    401: 'Não autorizado. Por favor, faça login novamente.',
-    404: 'Recurso não encontrado.',
-    409: 'Conflito: o recurso já existe.',
-    422: 'Erro de validação. Verifique os campos e tente novamente.',
-  }
-  return messages[status] ?? fallback
+const fallbackMessages: Record<number, string> = {
+  401: 'Não autorizado. Por favor, faça login novamente.',
+  404: 'Recurso não encontrado.',
+  409: 'Conflito: o recurso já existe.',
+  422: 'Erro de validação. Verifique os campos e tente novamente.',
+}
+
+const apiMessageTranslations: Record<string, string> = {
+  'Invalid credentials': 'Credenciais inválidas. Verifique seu e-mail e senha.',
+}
+
+function resolveMessage(status: number, apiMessage?: string): string {
+  const translated = apiMessage ? (apiMessageTranslations[apiMessage] ?? apiMessage) : undefined
+  return translated ?? fallbackMessages[status] ?? 'Erro inesperado. Tente novamente mais tarde.'
 }
 
 export function setupErrorHandler(instance: AxiosInstance): void {
@@ -28,7 +34,7 @@ export function setupErrorHandler(instance: AxiosInstance): void {
     (error) => {
       if (axios.isAxiosError(error) && error.response) {
         const { status, data } = error.response
-        const message = resolveMessage(status, data?.message ?? error.message)
+        const message = resolveMessage(status, data?.message)
         const code = resolveErrorCode(status)
         const errors = status === 422 ? (data?.errors ?? undefined) : undefined
         return Promise.reject(new AppError(message, status, code, errors))
