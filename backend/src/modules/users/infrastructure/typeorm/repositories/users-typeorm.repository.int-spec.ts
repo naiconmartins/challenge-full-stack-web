@@ -19,6 +19,7 @@ describe("UsersTypeormRepository integration tests", () => {
   });
 
   afterAll(async () => {
+    await testDataSource.manager.query("DELETE FROM users");
     await testDataSource.destroy();
   });
 
