@@ -3,7 +3,7 @@ import "reflect-metadata";
 import { ConflictError } from "@/common/domain/errors/conflit-error";
 import { NotFoundError } from "@/common/domain/errors/not-found-error";
 import { StudentsRepository } from "@/modules/students/domain/repositories/students.repository";
-import { StudentsInMemoryRepository } from "@/modules/students/infraestructure/in-memory/repositories/students-in-memory.repository";
+import { StudentsInMemoryRepository } from "@/modules/students/infrastructure/in-memory/repositories/students-in-memory.repository";
 import { UpdateStudentUseCase } from "./update-student.usecase";
 
 describe("UpdateStudentUseCase Unit Tests", () => {

@@ -1,6 +1,6 @@
 import "reflect-metadata";
 
-import { StudentsInMemoryRepository } from "@/modules/students/infraestructure/in-memory/repositories/students-in-memory.repository";
+import { StudentsInMemoryRepository } from "@/modules/students/infrastructure/in-memory/repositories/students-in-memory.repository";
 import { SearchStudentUseCase } from "./search-student.usecase";
 
 describe("SearchStudentUseCase Unit Tests", () => {

@@ -2,7 +2,7 @@ import "reflect-metadata";
 
 import { NotFoundError } from "@/common/domain/errors/not-found-error";
 import { StudentsRepository } from "@/modules/students/domain/repositories/students.repository";
-import { StudentsInMemoryRepository } from "@/modules/students/infraestructure/in-memory/repositories/students-in-memory.repository";
+import { StudentsInMemoryRepository } from "@/modules/students/infrastructure/in-memory/repositories/students-in-memory.repository";
 import { GetStudentUseCase } from "./get-student.usecase";
 
 describe("GetStudentUseCase Unit Tests", () => {

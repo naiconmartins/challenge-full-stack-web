@@ -1,1 +1,1 @@
-import "@/modules/students/infraestructure/container";
+import "@/modules/students/infrastructure/container";
