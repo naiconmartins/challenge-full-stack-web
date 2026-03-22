@@ -1,0 +1,137 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { setActivePinia, createPinia } from 'pinia'
+import { useAuthStore } from '../auth.store'
+import { AppError } from '@/domain/errors/app.error'
+
+const mocks = vi.hoisted(() => ({
+  login: { execute: vi.fn() },
+  setAuthToken: vi.fn(),
+  clearAuthToken: vi.fn(),
+}))
+
+vi.mock('@/infrastructure/repositories/auth.repository.impl', () => ({
+  AuthRepositoryImpl: class {},
+}))
+
+vi.mock('@/application/use-cases/auth/login.use-case', () => ({
+  LoginUseCase: vi.fn(function () { return mocks.login }),
+}))
+
+vi.mock('@/infrastructure/http/http-client', () => ({
+  httpClient: {},
+  setAuthToken: mocks.setAuthToken,
+  clearAuthToken: mocks.clearAuthToken,
+}))
+
+describe('useAuthStore', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+    vi.clearAllMocks()
+    localStorage.clear()
+  })
+
+  describe('isAuthenticated', () => {
+    it('should return false when there is no token in localStorage', () => {
+      const store = useAuthStore()
+      expect(store.isAuthenticated).toBe(false)
+    })
+
+    it('should return true when there is a token in localStorage', () => {
+      localStorage.setItem('access_token', 'my-token')
+      const store = useAuthStore()
+      expect(store.isAuthenticated).toBe(true)
+    })
+  })
+
+  describe('login', () => {
+    const credentials = { email: 'user@example.com', password: '123456' }
+
+    it('should set isLoading to true while logging in and false after', async () => {
+      let resolvePromise!: (value: { access_token: string }) => void
+      mocks.login.execute.mockReturnValue(
+        new Promise((res) => { resolvePromise = res }),
+      )
+
+      const store = useAuthStore()
+      const promise = store.login(credentials)
+
+      expect(store.isLoading).toBe(true)
+
+      resolvePromise({ access_token: 'token' })
+      await promise
+
+      expect(store.isLoading).toBe(false)
+    })
+
+    it('should call setAuthToken with the returned token on success', async () => {
+      mocks.login.execute.mockResolvedValue({ access_token: 'abc123' })
+
+      const store = useAuthStore()
+      await store.login(credentials)
+
+      expect(mocks.setAuthToken).toHaveBeenCalledWith('abc123')
+    })
+
+    it('should clear error before each call', async () => {
+      const appError = new AppError('Unauthorized', 401)
+      mocks.login.execute.mockRejectedValueOnce(appError)
+      mocks.login.execute.mockResolvedValueOnce({ access_token: 'token' })
+
+      const store = useAuthStore()
+
+      await store.login(credentials).catch(() => {})
+      expect(store.error).toEqual(appError)
+
+      await store.login(credentials)
+      expect(store.error).toBeNull()
+    })
+
+    it('should keep the AppError when use case throws an AppError', async () => {
+      const appError = new AppError('Unauthorized', 401)
+      mocks.login.execute.mockRejectedValue(appError)
+
+      const store = useAuthStore()
+      await store.login(credentials).catch(() => {})
+
+      expect(store.error).toBe(appError)
+    })
+
+    it('should wrap unknown errors in AppError', async () => {
+      mocks.login.execute.mockRejectedValue(new Error('network failure'))
+
+      const store = useAuthStore()
+      await store.login(credentials).catch(() => {})
+
+      expect(store.error).toBeInstanceOf(AppError)
+      expect(store.error?.message).toBe('Erro inesperado.')
+      expect(store.error?.statusCode).toBe(0)
+    })
+
+    it('should always rethrow the error', async () => {
+      const appError = new AppError('Unauthorized', 401)
+      mocks.login.execute.mockRejectedValue(appError)
+
+      const store = useAuthStore()
+
+      await expect(store.login(credentials)).rejects.toBeInstanceOf(AppError)
+    })
+
+    it('should set isLoading to false even when it throws', async () => {
+      mocks.login.execute.mockRejectedValue(new Error('fail'))
+
+      const store = useAuthStore()
+      await store.login(credentials).catch(() => {})
+
+      expect(store.isLoading).toBe(false)
+    })
+  })
+
+  describe('logout', () => {
+    it('should call clearAuthToken', () => {
+      const store = useAuthStore()
+      store.logout()
+
+      expect(mocks.clearAuthToken).toHaveBeenCalledOnce()
+    })
+  })
+})
