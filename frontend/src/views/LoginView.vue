@@ -52,13 +52,13 @@
             @click:append-inner="showPassword = !showPassword"
           />
 
-          <div v-if="errorMessage" class="text-center bg-white mb-6 text-[#FF0545] p-0">
+          <div v-if="errorMessage" class="text-center bg-white mb-6 text-[#FF002B] p-0">
             {{ errorMessage }}
           </div>
 
           <v-btn
             type="submit"
-            color="#5865f2"
+            color="#FF002B"
             variant="flat"
             size="large"
             block
