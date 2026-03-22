@@ -1,0 +1,9 @@
+import { httpClient } from './http'
+import type { LoginCredentials, TokenResponse } from '@/types/auth'
+
+export const authService = {
+  async login(credentials: LoginCredentials): Promise<TokenResponse> {
+    const response = await httpClient.post<TokenResponse>('/auth/login', credentials)
+    return response.data
+  },
+}

@@ -3,7 +3,7 @@ import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth.store'
 import { useFormRules } from '@/composables/shared/useFormRules'
-import { AppError } from '@/domain/errors/app.error'
+import { AppError } from '@/errors/app.error'
 
 export function useLoginForm() {
   const router = useRouter()

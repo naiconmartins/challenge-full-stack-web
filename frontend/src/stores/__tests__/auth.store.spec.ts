@@ -1,23 +1,19 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import { useAuthStore } from '../auth.store'
-import { AppError } from '@/domain/errors/app.error'
+import { AppError } from '@/errors/app.error'
 
 const mocks = vi.hoisted(() => ({
-  login: { execute: vi.fn() },
+  login: vi.fn(),
   setAuthToken: vi.fn(),
   clearAuthToken: vi.fn(),
 }))
 
-vi.mock('@/infrastructure/repositories/auth.repository.impl', () => ({
-  AuthRepositoryImpl: class {},
+vi.mock('@/services/auth.service', () => ({
+  authService: { login: mocks.login },
 }))
 
-vi.mock('@/application/use-cases/auth/login.use-case', () => ({
-  LoginUseCase: vi.fn(function () { return mocks.login }),
-}))
-
-vi.mock('@/infrastructure/http/http-client', () => ({
+vi.mock('@/services/http', () => ({
   httpClient: {},
   setAuthToken: mocks.setAuthToken,
   clearAuthToken: mocks.clearAuthToken,
@@ -48,7 +44,7 @@ describe('useAuthStore', () => {
 
     it('should set isLoading to true while logging in and false after', async () => {
       let resolvePromise!: (value: { access_token: string }) => void
-      mocks.login.execute.mockReturnValue(
+      mocks.login.mockReturnValue(
         new Promise((res) => { resolvePromise = res }),
       )
 
@@ -64,7 +60,7 @@ describe('useAuthStore', () => {
     })
 
     it('should call setAuthToken with the returned token on success', async () => {
-      mocks.login.execute.mockResolvedValue({ access_token: 'abc123' })
+      mocks.login.mockResolvedValue({ access_token: 'abc123' })
 
       const store = useAuthStore()
       await store.login(credentials)
@@ -74,8 +70,8 @@ describe('useAuthStore', () => {
 
     it('should clear error before each call', async () => {
       const appError = new AppError('Unauthorized', 401)
-      mocks.login.execute.mockRejectedValueOnce(appError)
-      mocks.login.execute.mockResolvedValueOnce({ access_token: 'token' })
+      mocks.login.mockRejectedValueOnce(appError)
+      mocks.login.mockResolvedValueOnce({ access_token: 'token' })
 
       const store = useAuthStore()
 
@@ -86,9 +82,9 @@ describe('useAuthStore', () => {
       expect(store.error).toBeNull()
     })
 
-    it('should keep the AppError when use case throws an AppError', async () => {
+    it('should keep the AppError when service throws an AppError', async () => {
       const appError = new AppError('Unauthorized', 401)
-      mocks.login.execute.mockRejectedValue(appError)
+      mocks.login.mockRejectedValue(appError)
 
       const store = useAuthStore()
       await store.login(credentials).catch(() => {})
@@ -97,7 +93,7 @@ describe('useAuthStore', () => {
     })
 
     it('should wrap unknown errors in AppError', async () => {
-      mocks.login.execute.mockRejectedValue(new Error('network failure'))
+      mocks.login.mockRejectedValue(new Error('network failure'))
 
       const store = useAuthStore()
       await store.login(credentials).catch(() => {})
@@ -109,7 +105,7 @@ describe('useAuthStore', () => {
 
     it('should always rethrow the error', async () => {
       const appError = new AppError('Unauthorized', 401)
-      mocks.login.execute.mockRejectedValue(appError)
+      mocks.login.mockRejectedValue(appError)
 
       const store = useAuthStore()
 
@@ -117,7 +113,7 @@ describe('useAuthStore', () => {
     })
 
     it('should set isLoading to false even when it throws', async () => {
-      mocks.login.execute.mockRejectedValue(new Error('fail'))
+      mocks.login.mockRejectedValue(new Error('fail'))
 
       const store = useAuthStore()
       await store.login(credentials).catch(() => {})

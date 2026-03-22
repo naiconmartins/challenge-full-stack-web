@@ -1,11 +1,10 @@
 import { ref } from 'vue'
-import { DeleteStudentUseCase } from '@/application/use-cases/students/delete-student.use-case'
-import { StudentRepositoryImpl } from '@/infrastructure/repositories/student.repository.impl'
-import type { Student } from '@/domain/entities/student.entity'
-import { AppError } from '@/domain/errors/app.error'
+import { studentsService } from '@/services/students.service'
+import { useNotification } from '@/composables/shared/useNotification'
+import type { Student } from '@/types/student'
+import { AppError } from '@/errors/app.error'
 
-const studentRepository = new StudentRepositoryImpl()
-const deleteStudentUseCase = new DeleteStudentUseCase(studentRepository)
+const { notify } = useNotification()
 
 export function useStudentActions() {
   const deleteDialog = ref(false)
@@ -30,8 +29,9 @@ export function useStudentActions() {
     isDeleting.value = true
     deleteError.value = null
     try {
-      await deleteStudentUseCase.execute(selectedStudent.value.id)
+      await studentsService.delete(selectedStudent.value.id)
       closeDeleteDialog()
+      notify('Aluno excluído com sucesso!')
       onSuccess()
     } catch (err) {
       deleteError.value = AppError.isAppError(err) ? err.message : 'Erro ao excluir aluno.'

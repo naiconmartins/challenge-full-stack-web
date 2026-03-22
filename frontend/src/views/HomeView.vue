@@ -54,7 +54,7 @@ import StudentTable from '@/components/students/StudentTable.vue'
 import StudentDeleteDialog from '@/components/students/StudentDeleteDialog.vue'
 import { useStudentList } from '@/composables/students/useStudentList'
 import { useStudentActions } from '@/composables/students/useStudentActions'
-import type { Student } from '@/domain/entities/student.entity'
+import type { Student } from '@/types/student'
 
 const router = useRouter()
 

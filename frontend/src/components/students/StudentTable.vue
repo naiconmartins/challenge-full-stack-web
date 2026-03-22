@@ -79,7 +79,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { Student } from '@/domain/entities/student.entity'
+import type { Student } from '@/types/student'
 
 defineProps<{
   students: Student[]

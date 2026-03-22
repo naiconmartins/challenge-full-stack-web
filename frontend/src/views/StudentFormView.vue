@@ -85,17 +85,6 @@
               {{ errorMessage }}
             </v-alert>
 
-            <v-alert
-              v-if="successMessage"
-              type="success"
-              variant="tonal"
-              color="#00B8BF"
-              density="compact"
-              class="mb-4 text-sm"
-            >
-              {{ successMessage }}
-            </v-alert>
-
             <div class="flex justify-end gap-3">
               <v-btn
                 variant="outlined"
@@ -128,6 +117,7 @@
 <script lang="ts" setup>
 import AppSidebar from '@/components/layout/AppSidebar.vue'
 import { useStudentForm } from '@/composables/students/useStudentForm'
+import { maskCpf } from '@/utils/masks'
 
 const {
   formRef,
@@ -137,7 +127,6 @@ const {
   isLoading,
   isFetching,
   errorMessage,
-  successMessage,
   raRules,
   nameRules,
   emailRules,
@@ -145,13 +134,4 @@ const {
   handleSubmit,
   handleCancel,
 } = useStudentForm()
-
-function maskCpf(value: string): string {
-  return value
-    .replace(/\D/g, '')
-    .replace(/(\d{3})(\d)/, '$1.$2')
-    .replace(/(\d{3})(\d)/, '$1.$2')
-    .replace(/(\d{3})(\d{1,2})$/, '$1-$2')
-    .slice(0, 14)
-}
 </script>

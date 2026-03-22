@@ -2,7 +2,7 @@
   <div class="flex flex-col md:flex-row items-center gap-3">
     <v-text-field
       v-model="model"
-      placeholder="Buscar por nome, e-mail ou RA..."
+      placeholder="Buscar por nome, CPF ou RA..."
       prepend-inner-icon="mdi-magnify"
       variant="outlined"
       density="compact"

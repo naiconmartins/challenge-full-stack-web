@@ -1,15 +1,11 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { LoginUseCase } from '@/application/use-cases/auth/login.use-case'
-import { AuthRepositoryImpl } from '@/infrastructure/repositories/auth.repository.impl'
-import { setAuthToken, clearAuthToken } from '@/infrastructure/http/http-client'
-import type { LoginCredentials } from '@/domain/entities/auth.entity'
-import { AppError } from '@/domain/errors/app.error'
+import { authService } from '@/services/auth.service'
+import { setAuthToken, clearAuthToken } from '@/services/http'
+import type { LoginCredentials } from '@/types/auth'
+import { AppError } from '@/errors/app.error'
 
 export const useAuthStore = defineStore('auth', () => {
-  const authRepository = new AuthRepositoryImpl()
-  const loginUseCase = new LoginUseCase(authRepository)
-
   const token = ref<string | null>(localStorage.getItem('access_token'))
   const isLoading = ref(false)
   const error = ref<AppError | null>(null)
@@ -20,7 +16,7 @@ export const useAuthStore = defineStore('auth', () => {
     isLoading.value = true
     error.value = null
     try {
-      const { access_token } = await loginUseCase.execute(credentials)
+      const { access_token } = await authService.login(credentials)
       setAuthToken(access_token)
       token.value = access_token
     } catch (err) {

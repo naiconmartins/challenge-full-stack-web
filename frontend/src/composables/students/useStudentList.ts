@@ -1,11 +1,7 @@
 import { ref } from 'vue'
-import { ListStudentsUseCase } from '@/application/use-cases/students/list-students.use-case'
-import { StudentRepositoryImpl } from '@/infrastructure/repositories/student.repository.impl'
-import type { Student, StudentListResponse, ListStudentsParams } from '@/domain/entities/student.entity'
-import { AppError } from '@/domain/errors/app.error'
-
-const studentRepository = new StudentRepositoryImpl()
-const listStudentsUseCase = new ListStudentsUseCase(studentRepository)
+import { studentsService } from '@/services/students.service'
+import type { Student, StudentListResponse, ListStudentsParams } from '@/types/student'
+import { AppError } from '@/errors/app.error'
 
 export function useStudentList() {
   const students = ref<Student[]>([])
@@ -21,7 +17,7 @@ export function useStudentList() {
     isLoading.value = true
     error.value = null
     try {
-      const response: StudentListResponse = await listStudentsUseCase.execute({
+      const response: StudentListResponse = await studentsService.list({
         page: currentPage.value,
         per_page: perPage.value,
         ...params,
