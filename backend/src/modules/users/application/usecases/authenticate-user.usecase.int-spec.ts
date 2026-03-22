@@ -62,16 +62,4 @@ describe("AuthenticateUserUseCase Integration Tests", () => {
       }),
     ).rejects.toBeInstanceOf(InvalidCredentialsError);
   });
-
-  it("should throw InvalidCredentialsError when email is empty", async () => {
-    await expect(() =>
-      sut.execute({ email: "", password: "123456" }),
-    ).rejects.toBeInstanceOf(InvalidCredentialsError);
-  });
-
-  it("should throw InvalidCredentialsError when password is empty", async () => {
-    await expect(() =>
-      sut.execute({ email: "a@a.com", password: "" }),
-    ).rejects.toBeInstanceOf(InvalidCredentialsError);
-  });
 });

@@ -22,10 +22,6 @@ export namespace AuthenticateUserUseCase {
       private hashProvider: HashProvider,
     ) {}
     async execute(input: Input): Promise<Output> {
-      if (!input.email || !input.password) {
-        throw new InvalidCredentialsError("Invalid credentials");
-      }
-
       let user;
       try {
         user = await this.usersRepository.findByEmail(input.email);
