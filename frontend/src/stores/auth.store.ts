@@ -2,11 +2,12 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { authService } from '@/services/auth.service'
 import { setAuthToken, clearAuthToken, AUTH_TOKEN_KEY } from '@/infra/http'
-import type { LoginCredentials } from '@/types/auth'
+import type { AuthUser, LoginCredentials } from '@/types/auth'
 import { AppError } from '@/errors/app.error'
 
 export const useAuthStore = defineStore('auth', () => {
   const token = ref<string | null>(localStorage.getItem(AUTH_TOKEN_KEY))
+  const user = ref<AuthUser | null>(null)
   const isLoading = ref(false)
   const error = ref<AppError | null>(null)
 
@@ -19,6 +20,7 @@ export const useAuthStore = defineStore('auth', () => {
       const { access_token } = await authService.login(credentials)
       setAuthToken(access_token)
       token.value = access_token
+      user.value = await authService.me()
     } catch (err) {
       error.value = AppError.isAppError(err) ? err : new AppError('Erro inesperado.', 0)
       throw error.value
@@ -27,14 +29,21 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  async function fetchMe(): Promise<AuthUser> {
+    const profile = await authService.me()
+    user.value = profile
+    return profile
+  }
+
   async function logout(): Promise<void> {
     try {
       await authService.logout()
     } finally {
       clearAuthToken()
       token.value = null
+      user.value = null
     }
   }
 
-  return { isLoading, error, isAuthenticated, login, logout }
+  return { user, isLoading, error, isAuthenticated, login, fetchMe, logout }
 })

@@ -5,13 +5,14 @@ import { AppError } from '@/errors/app.error'
 
 const mocks = vi.hoisted(() => ({
   login: vi.fn(),
+  me: vi.fn(),
   logout: vi.fn(),
   setAuthToken: vi.fn(),
   clearAuthToken: vi.fn(),
 }))
 
 vi.mock('@/services/auth.service', () => ({
-  authService: { login: mocks.login, logout: mocks.logout },
+  authService: { login: mocks.login, me: mocks.me, logout: mocks.logout },
 }))
 
 vi.mock('@/infra/http', () => ({
@@ -63,6 +64,12 @@ describe('useAuthStore', () => {
 
     it('should call setAuthToken with the returned token on success', async () => {
       mocks.login.mockResolvedValue({ access_token: 'abc123' })
+      mocks.me.mockResolvedValue({
+        id: '1',
+        name: 'Joao Silva',
+        email: 'joao@example.com',
+        role: 'ADMINISTRATIVE',
+      })
 
       const store = useAuthStore()
       await store.login(credentials)
@@ -74,6 +81,12 @@ describe('useAuthStore', () => {
       const appError = new AppError('Unauthorized', 401)
       mocks.login.mockRejectedValueOnce(appError)
       mocks.login.mockResolvedValueOnce({ access_token: 'token' })
+      mocks.me.mockResolvedValue({
+        id: '1',
+        name: 'Joao Silva',
+        email: 'joao@example.com',
+        role: 'ADMINISTRATIVE',
+      })
 
       const store = useAuthStore()
 
@@ -124,6 +137,25 @@ describe('useAuthStore', () => {
     })
   })
 
+  describe('fetchMe', () => {
+    it('should load and store the authenticated user', async () => {
+      const user = {
+        id: '1',
+        name: 'Joao Silva',
+        email: 'joao@example.com',
+        role: 'ADMINISTRATIVE' as const,
+      }
+      mocks.me.mockResolvedValue(user)
+
+      const store = useAuthStore()
+      const result = await store.fetchMe()
+
+      expect(mocks.me).toHaveBeenCalledOnce()
+      expect(result).toEqual(user)
+      expect(store.user).toEqual(user)
+    })
+  })
+
   describe('logout', () => {
     it('should call authService.logout', async () => {
       mocks.logout.mockResolvedValue(undefined)
@@ -156,6 +188,22 @@ describe('useAuthStore', () => {
       await store.logout().catch(() => {})
 
       expect(mocks.clearAuthToken).toHaveBeenCalledOnce()
+    })
+
+    it('should clear user state after logout', async () => {
+      mocks.me.mockResolvedValue({
+        id: '1',
+        name: 'Joao Silva',
+        email: 'joao@example.com',
+        role: 'ADMINISTRATIVE',
+      })
+      mocks.logout.mockResolvedValue(undefined)
+      const store = useAuthStore()
+
+      await store.fetchMe()
+      await store.logout()
+
+      expect(store.user).toBeNull()
     })
   })
 })

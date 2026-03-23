@@ -3,10 +3,11 @@ import { authService } from '../auth.service'
 
 const mocks = vi.hoisted(() => ({
   post: vi.fn(),
+  get: vi.fn(),
 }))
 
 vi.mock('@/infra/http', () => ({
-  httpClient: { post: mocks.post },
+  httpClient: { post: mocks.post, get: mocks.get },
 }))
 
 describe('authService', () => {
@@ -40,6 +41,23 @@ describe('authService', () => {
       mocks.post.mockRejectedValue(new Error('unauthorized'))
 
       await expect(authService.logout()).rejects.toThrow('unauthorized')
+    })
+  })
+
+  describe('me', () => {
+    it('gets the authenticated user profile', async () => {
+      const user = {
+        id: '1',
+        name: 'Joao Silva',
+        email: 'joao@example.com',
+        role: 'ADMINISTRATIVE' as const,
+      }
+      mocks.get.mockResolvedValue({ data: user })
+
+      const result = await authService.me()
+
+      expect(mocks.get).toHaveBeenCalledWith('/auth/me')
+      expect(result).toEqual(user)
     })
   })
 })
