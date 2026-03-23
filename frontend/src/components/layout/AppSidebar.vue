@@ -32,7 +32,7 @@
         :to="{ name: 'home' }"
         prepend-icon="mdi-account-group-outline"
         value="students"
-        active-color="white"
+        color="white"
         rounded="lg"
         class="text-white"
         @click="isMobile && (drawer = false)"

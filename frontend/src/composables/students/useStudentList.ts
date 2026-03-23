@@ -27,7 +27,9 @@ export function useStudentList() {
       currentPage.value = response.current_page
       lastPage.value = response.last_page
     } catch (err) {
-      error.value = AppError.isAppError(err) ? err.message : 'Erro inesperado ao carregar alunos.'
+      error.value = AppError.isAppError(err)
+        ? err.message
+        : 'Não foi possível carregar a lista de alunos. Atualize a página ou entre em contato com o suporte.'
     } finally {
       isLoading.value = false
     }

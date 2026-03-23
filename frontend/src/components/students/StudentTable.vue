@@ -10,7 +10,7 @@
     >
       <template #top>
         <div v-if="error" class="px-4 py-2">
-          <v-alert type="error" variant="tonal" density="compact" class="text-sm">
+          <v-alert type="error" variant="tonal" color="#FF002B" density="compact" class="text-sm">
             {{ error }}
           </v-alert>
         </div>

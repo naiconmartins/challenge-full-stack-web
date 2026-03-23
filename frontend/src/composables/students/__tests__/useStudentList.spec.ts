@@ -89,7 +89,7 @@ describe('useStudentList', () => {
       const { fetchStudents, error } = useStudentList()
       await fetchStudents()
 
-      expect(error.value).toBe('Erro inesperado ao carregar alunos.')
+      expect(error.value).toBe('Não foi possível carregar a lista de alunos. Atualize a página ou entre em contato com o suporte.')
     })
 
     it('sets isLoading to false even on error', async () => {
