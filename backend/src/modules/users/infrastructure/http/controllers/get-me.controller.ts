@@ -1,5 +1,4 @@
 import { GetMeUseCase } from "@/modules/users/application/usecases/get-me.usecase";
-import { instanceToInstance } from "class-transformer";
 import { Request, Response } from "express";
 import { container } from "tsyringe";
 
@@ -11,5 +10,5 @@ export async function getMeController(
 
   const user = await getMeUseCase.execute({ user_id: request.user.id });
 
-  return response.status(200).json(instanceToInstance(user));
+  return response.status(200).json(user);
 }

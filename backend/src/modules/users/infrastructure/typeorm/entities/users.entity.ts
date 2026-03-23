@@ -1,6 +1,5 @@
 import { UserRole } from "@/modules/users/domain/models/user-role";
 import { UserModel } from "@/modules/users/domain/models/users.model";
-import { Exclude } from "class-transformer";
 import {
   Column,
   CreateDateColumn,
@@ -21,7 +20,6 @@ export class User implements UserModel {
   email: string;
 
   @Column()
-  @Exclude()
   password: string;
 
   @Column({ type: "varchar" })
