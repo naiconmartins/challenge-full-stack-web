@@ -58,3 +58,18 @@
  *       401:
  *         description: Invalid credentials
  */
+
+/**
+ * @swagger
+ * /auth/logout:
+ *   post:
+ *     summary: Invalidate the current access token
+ *     tags: [Authentication]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       204:
+ *         description: Token successfully revoked
+ *       401:
+ *         description: Token is missing or invalid
+ */

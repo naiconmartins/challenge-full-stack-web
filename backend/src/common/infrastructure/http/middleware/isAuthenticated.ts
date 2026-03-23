@@ -1,13 +1,14 @@
 import { UnauthorizedError } from "@/common/domain/errors/unauthorized-error";
 import { AuthProvider } from "@/common/domain/providers/auth-provider";
+import { RevokedTokensRepository } from "@/modules/users/domain/repositories/revoked-tokens.repository";
 import { NextFunction, Request, Response } from "express";
 import { container } from "tsyringe";
 
-export function isAuthenticated(
+export async function isAuthenticated(
   req: Request,
   _res: Response,
   next: NextFunction,
-): void {
+): Promise<void> {
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
@@ -19,6 +20,14 @@ export function isAuthenticated(
   const { user_id } = authProvider.verifiyAuthKey(access_token);
   if (!user_id) {
     throw new UnauthorizedError("Invalid token");
+  }
+
+  const revokedTokensRepository: RevokedTokensRepository = container.resolve(
+    "RevokedTokensRepository",
+  );
+  const revoked = await revokedTokensRepository.isRevoked(access_token);
+  if (revoked) {
+    throw new UnauthorizedError("Token has been revoked");
   }
 
   req.user = {

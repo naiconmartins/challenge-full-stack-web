@@ -2,9 +2,10 @@ import { dataSource } from "@/common/infrastructure/typeorm";
 import { container } from "tsyringe";
 import { AuthenticateUserUseCase } from "../../application/usecases/authenticate-user.usecase";
 import { CreateUserUseCase } from "../../application/usecases/create-user.usecase";
-import { UserToken } from "../typeorm/entities/user-tokens.entity";
+import { LogoutUserUseCase } from "../../application/usecases/logout-user.usecase";
+import { RevokedToken } from "../typeorm/entities/revoked-token.entity";
 import { User } from "../typeorm/entities/users.entity";
-import { UserTokensTypeormRepository } from "../typeorm/repositories/user-tokens-typeorm.repository";
+import { RevokedTokensTypeormRepository } from "../typeorm/repositories/revoked-tokens-typeorm.repository";
 import { UsersTypeormRepository } from "../typeorm/repositories/users-typeorm.repository";
 
 container.registerSingleton("UsersRepository", UsersTypeormRepository);
@@ -22,11 +23,13 @@ container.registerSingleton(
 );
 
 container.registerSingleton(
-  "UserTokensRepository",
-  UserTokensTypeormRepository,
+  "RevokedTokensRepository",
+  RevokedTokensTypeormRepository,
 );
 
 container.registerInstance(
-  "UserTokensDefaultRepositoryTypeorm",
-  dataSource.getRepository(UserToken),
+  "RevokedTokensDefaultRepositoryTypeorm",
+  dataSource.getRepository(RevokedToken),
 );
+
+container.registerSingleton("LogoutUserUseCase", LogoutUserUseCase.UseCase);
