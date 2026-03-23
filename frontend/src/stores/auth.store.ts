@@ -1,12 +1,12 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { authService } from '@/services/auth.service'
-import { setAuthToken, clearAuthToken } from '@/services/http'
+import { setAuthToken, clearAuthToken, AUTH_TOKEN_KEY } from '@/services/http'
 import type { LoginCredentials } from '@/types/auth'
 import { AppError } from '@/errors/app.error'
 
 export const useAuthStore = defineStore('auth', () => {
-  const token = ref<string | null>(localStorage.getItem('access_token'))
+  const token = ref<string | null>(localStorage.getItem(AUTH_TOKEN_KEY))
   const isLoading = ref(false)
   const error = ref<AppError | null>(null)
 

@@ -15,6 +15,7 @@ vi.mock('@/services/auth.service', () => ({
 
 vi.mock('@/services/http', () => ({
   httpClient: {},
+  AUTH_TOKEN_KEY: 'access_token',
   setAuthToken: mocks.setAuthToken,
   clearAuthToken: mocks.clearAuthToken,
 }))

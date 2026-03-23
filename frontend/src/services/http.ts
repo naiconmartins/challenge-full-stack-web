@@ -3,7 +3,7 @@ import { env } from '@/config/env'
 import { AppError } from '@/errors/app.error'
 import type { AppErrorCode } from '@/errors/app.error'
 
-const AUTH_TOKEN_KEY = 'access_token'
+export const AUTH_TOKEN_KEY = 'access_token'
 
 function resolveErrorCode(status: number): AppErrorCode {
   if (status === 401) return 'UNAUTHORIZED'
@@ -19,6 +19,7 @@ const fallbackMessages: Record<number, string> = {
   404: 'Recurso não encontrado.',
   409: 'Conflito: o recurso já existe.',
   422: 'Erro de validação. Verifique os campos e tente novamente.',
+  500: 'Erro interno no servidor. Se o problema persistir, entre em contato com o suporte técnico.',
 }
 
 const apiMessageTranslations: Record<string, string> = {
@@ -55,7 +56,8 @@ function parseFieldErrors(
 
 function resolveMessage(status: number, apiMessage?: string): string {
   const translated = apiMessage ? (apiMessageTranslations[apiMessage] ?? apiMessage) : undefined
-  return translated ?? fallbackMessages[status] ?? 'Erro inesperado. Tente novamente mais tarde.'
+  const statusKey = status >= 500 ? 500 : status
+  return translated ?? fallbackMessages[statusKey] ?? 'Ocorreu um erro inesperado. Se o problema persistir, entre em contato com o suporte técnico.'
 }
 
 export const httpClient = axios.create({
@@ -78,7 +80,11 @@ httpClient.interceptors.response.use(
     }
 
     return Promise.reject(
-      new AppError('Erro inesperado. Tente novamente mais tarde.', 0, 'UNKNOWN_ERROR'),
+      new AppError(
+        'Não foi possível conectar ao servidor. Verifique sua conexão de rede ou entre em contato com o suporte.',
+        0,
+        'UNKNOWN_ERROR',
+      ),
     )
   },
 )
