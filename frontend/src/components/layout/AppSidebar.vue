@@ -83,8 +83,11 @@ const authStore = useAuthStore()
 const drawer = ref(true)
 const rail = ref(false)
 
-function handleLogout(): void {
-  authStore.logout()
-  router.push({ name: 'login' })
+async function handleLogout(): Promise<void> {
+  try {
+    await authStore.logout()
+  } finally {
+    router.push({ name: 'login' })
+  }
 }
 </script>
