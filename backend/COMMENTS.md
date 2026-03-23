@@ -56,11 +56,9 @@ Como diferencial de segurança, implementei autenticação com `JWT` e revogaç�
 - `globals`: foi utilizado na configuração do ESLint para declarar conjuntos de variáveis globais do ambiente.
 - `prettier`: foi escolhido para padronizar formatação automaticamente e evitar divergências de estilo no projeto.
 
-Observação: os pacotes `@types/*` também estão presentes no projeto, mas foram utilizados apenas para fornecer tipagem das bibliotecas principais durante o desenvolvimento em TypeScript.
-
 ## O que eu melhoraria se tivesse mais tempo
 
-- Adicionaria testes end-to-end cobrindo o fluxo HTTP completo, não apenas testes unitários e de integração de repositório/use case.
+- Adicionaria testes end-to-end cobrindo o fluxo HTTP completo, não apenas testes unitários e de integração.
 - Adicionaria logging estruturado para facilitar rastreabilidade e diagnóstico de erro em ambiente real.
 - Criaria uma estratégia mais completa de auditoria para ações administrativas, como criação, edição e exclusão de alunos.
 
