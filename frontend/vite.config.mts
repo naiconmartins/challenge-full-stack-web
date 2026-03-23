@@ -59,5 +59,10 @@ export default defineConfig({
     typecheck: {
       tsconfig: './tsconfig.vitest.json',
     },
+    server: {
+      deps: {
+        inline: ['vuetify'],
+      },
+    },
   },
 })
