@@ -99,6 +99,29 @@ describe('StudentTable', () => {
       await nextTick()
       expect(wrapper.text()).toContain('Nenhum aluno encontrado')
     })
+
+    it('renders sortable headers for RA, Nome, E-mail and CPF', async () => {
+      const wrapper = mountTable()
+      await nextTick()
+
+      const sortableHeaders = wrapper.findAll('th.v-data-table__th--sortable')
+
+      expect(sortableHeaders).toHaveLength(4)
+      expect(wrapper.text()).toContain('Reg. Acadêmico (RA)')
+      expect(wrapper.text()).toContain('Nome')
+      expect(wrapper.text()).toContain('E-mail')
+      expect(wrapper.text()).toContain('CPF')
+    })
+
+    it('keeps sort icons visible for sortable columns', async () => {
+      const wrapper = mountTable()
+      await nextTick()
+
+      const sortIcons = wrapper.findAll('.v-data-table-header__sort-icon')
+
+      expect(sortIcons).toHaveLength(4)
+      expect(wrapper.find('.student-table').exists()).toBe(true)
+    })
   })
 
   describe('pagination', () => {

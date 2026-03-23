@@ -6,7 +6,7 @@
       :loading="loading"
       :items-per-page="perPage"
       hide-default-footer
-      class="rounded-lg border border-slate-200"
+      class="student-table rounded-lg border border-slate-200"
     >
       <template #top>
         <div v-if="error" class="px-4 py-2">
@@ -99,10 +99,10 @@ const emit = defineEmits<{
 }>()
 
 const headers = [
-  { title: 'Reg. Acadêmico (RA)', key: 'ra', sortable: false },
+  { title: 'Reg. Acadêmico (RA)', key: 'ra', sortable: true },
   { title: 'Nome', key: 'name', sortable: true },
-  { title: 'E-mail', key: 'email', sortable: false },
-  { title: 'CPF', key: 'cpf', sortable: false },
+  { title: 'E-mail', key: 'email', sortable: true },
+  { title: 'CPF', key: 'cpf', sortable: true },
   { title: 'Ações', key: 'actions', sortable: false, align: 'center' as const },
 ]
 
@@ -110,3 +110,14 @@ function formatCpf(cpf: string): string {
   return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
 }
 </script>
+
+<style scoped>
+:deep(.student-table .v-data-table-header__sort-icon) {
+  opacity: 0.5;
+  font-size: 0.875rem;
+}
+
+:deep(.student-table .v-data-table__th--sorted .v-data-table-header__sort-icon) {
+  opacity: 1;
+}
+</style>
