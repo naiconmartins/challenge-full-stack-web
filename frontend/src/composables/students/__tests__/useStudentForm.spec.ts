@@ -109,7 +109,7 @@ describe('useStudentForm', () => {
       const { errorMessage } = useStudentForm()
       await flushPromises()
 
-      expect(errorMessage.value).toBe('Erro ao carregar dados do aluno.')
+      expect(errorMessage.value).toBe('Não foi possível carregar os dados do aluno. Se o problema persistir, entre em contato com o suporte.')
     })
   })
 
@@ -262,7 +262,7 @@ describe('useStudentForm', () => {
 
       await handleSubmit()
 
-      expect(errorMessage.value).toBe('Ocorreu um erro inesperado. Tente novamente.')
+      expect(errorMessage.value).toBe('Não foi possível salvar os dados. Se o problema persistir, entre em contato com o suporte.')
     })
 
     it('sets isLoading to false even on error', async () => {
