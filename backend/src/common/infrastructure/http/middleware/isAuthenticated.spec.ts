@@ -1,6 +1,7 @@
 import { UnauthorizedError } from "@/common/domain/errors/unauthorized-error";
 import { AuthProvider } from "@/common/domain/providers/auth-provider";
 import { RevokedTokensRepository } from "@/modules/users/domain/repositories/revoked-tokens.repository";
+import { UsersDataBuilder } from "@/modules/users/testing/helpers/users-data-builder";
 import { NextFunction, Request, Response } from "express";
 import "reflect-metadata";
 import { container } from "tsyringe";
@@ -22,6 +23,7 @@ describe("isAuthenticated middleware", () => {
   });
 
   it("should set request user and call next when token is valid", async () => {
+    const user = UsersDataBuilder({ role: "ATTENDANT" });
     const req = {
       headers: {
         authorization: "Bearer valid.jwt.token",
@@ -31,8 +33,8 @@ describe("isAuthenticated middleware", () => {
     const authProvider: AuthProvider = {
       generateAuthKey: jest.fn(),
       verifiyAuthKey: jest.fn().mockReturnValue({
-        user_id: "user-id-1",
-        role: "ATTENDANT",
+        user_id: user.id,
+        role: user.role,
       }),
     };
     const revokedTokensRepository: RevokedTokensRepository = {
@@ -59,13 +61,14 @@ describe("isAuthenticated middleware", () => {
       "valid.jwt.token",
     );
     expect(req.user).toStrictEqual({
-      id: "user-id-1",
-      role: "ATTENDANT",
+      id: user.id,
+      role: user.role,
     });
     expect(next).toHaveBeenCalledTimes(1);
   });
 
   it("should throw UnauthorizedError when token payload does not contain user id", async () => {
+    const user = UsersDataBuilder({ role: "ATTENDANT" });
     const req = {
       headers: {
         authorization: "Bearer invalid.jwt.token",
@@ -75,7 +78,7 @@ describe("isAuthenticated middleware", () => {
       generateAuthKey: jest.fn(),
       verifiyAuthKey: jest.fn().mockReturnValue({
         user_id: "",
-        role: "ATTENDANT",
+        role: user.role,
       }),
     };
     const revokedTokensRepository: RevokedTokensRepository = {
@@ -101,6 +104,7 @@ describe("isAuthenticated middleware", () => {
   });
 
   it("should throw UnauthorizedError when token has been revoked", async () => {
+    const user = UsersDataBuilder({ role: "ADMIN" });
     const req = {
       headers: {
         authorization: "Bearer revoked.jwt.token",
@@ -109,8 +113,8 @@ describe("isAuthenticated middleware", () => {
     const authProvider: AuthProvider = {
       generateAuthKey: jest.fn(),
       verifiyAuthKey: jest.fn().mockReturnValue({
-        user_id: "user-id-1",
-        role: "ADMIN",
+        user_id: user.id,
+        role: user.role,
       }),
     };
     const revokedTokensRepository: RevokedTokensRepository = {
