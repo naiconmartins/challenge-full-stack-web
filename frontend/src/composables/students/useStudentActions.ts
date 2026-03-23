@@ -4,9 +4,8 @@ import { useNotification } from '@/composables/shared/useNotification'
 import type { Student } from '@/types/student'
 import { AppError } from '@/errors/app.error'
 
-const { notify } = useNotification()
-
 export function useStudentActions() {
+  const { notify } = useNotification()
   const deleteDialog = ref(false)
   const selectedStudent = ref<Student | null>(null)
   const isDeleting = ref(false)
@@ -34,7 +33,9 @@ export function useStudentActions() {
       notify('Aluno excluído com sucesso!')
       onSuccess()
     } catch (err) {
-      deleteError.value = AppError.isAppError(err) ? err.message : 'Erro ao excluir aluno.'
+      deleteError.value = AppError.isAppError(err)
+        ? err.message
+        : 'Não foi possível excluir o aluno. Se o problema persistir, entre em contato com o suporte.'
     } finally {
       isDeleting.value = false
     }
