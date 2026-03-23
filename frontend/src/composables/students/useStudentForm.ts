@@ -1,4 +1,4 @@
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted, type ComponentPublicInstance } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { studentsService } from '@/services/students.service'
 import { useFormRules } from '@/composables/shared/useFormRules'
@@ -14,7 +14,7 @@ export function useStudentForm() {
   const isEditMode = computed(() => !!route.params.id)
   const studentId = computed(() => route.params.id as string)
 
-  const formRef = ref()
+  const formRef = ref<ComponentPublicInstance & { validate: () => Promise<{ valid: boolean }> } | null>(null)
   const isLoading = ref(false)
   const isFetching = ref(false)
   const errorMessage = ref('')
@@ -57,7 +57,9 @@ export function useStudentForm() {
       form.email = student.email
       form.cpf = student.cpf
     } catch (err) {
-      errorMessage.value = AppError.isAppError(err) ? err.message : 'Erro ao carregar dados do aluno.'
+      errorMessage.value = AppError.isAppError(err)
+        ? err.message
+        : 'Não foi possível carregar os dados do aluno. Se o problema persistir, entre em contato com o suporte.'
     } finally {
       isFetching.value = false
     }
@@ -92,12 +94,12 @@ export function useStudentForm() {
           fieldErrors.email = err.errors['email'] ?? []
           fieldErrors.ra = err.errors['ra'] ?? []
           fieldErrors.cpf = err.errors['cpf'] ?? []
-          errorMessage.value = Object.values(err.errors).flat()[0] ?? err.message
+          errorMessage.value = err.message
         } else {
           errorMessage.value = err.message
         }
       } else {
-        errorMessage.value = 'Ocorreu um erro inesperado. Tente novamente.'
+        errorMessage.value = 'Não foi possível salvar os dados. Se o problema persistir, entre em contato com o suporte.'
       }
     } finally {
       isLoading.value = false
