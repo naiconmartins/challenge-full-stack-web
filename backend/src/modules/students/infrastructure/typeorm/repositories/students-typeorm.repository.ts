@@ -23,7 +23,13 @@ export class StudentsTypeormRepository implements StudentsRepository {
   ) {}
 
   async conflictingCpf(cpf: string): Promise<void> {
-    const student = await this.studentsRepository.findOneBy({ cpf });
+    const normalizedCpf = cpf.replace(/\D/g, "");
+    const student = await this.studentsRepository
+      .createQueryBuilder("student")
+      .where("regexp_replace(student.cpf, '\\D', '', 'g') = :cpf", {
+        cpf: normalizedCpf,
+      })
+      .getOne();
     if (student) {
       throw new ConflictError(`A student with this CPF already exists`);
     }
@@ -37,7 +43,13 @@ export class StudentsTypeormRepository implements StudentsRepository {
   }
 
   async conflictingEmail(email: string, excludeId?: string): Promise<void> {
-    const student = await this.studentsRepository.findOneBy({ email });
+    const normalizedEmail = email.trim().toLowerCase();
+    const student = await this.studentsRepository
+      .createQueryBuilder("student")
+      .where("LOWER(student.email) = :email", {
+        email: normalizedEmail,
+      })
+      .getOne();
     if (student && student.id !== excludeId) {
       throw new ConflictError(`A student with this email already exists`);
     }

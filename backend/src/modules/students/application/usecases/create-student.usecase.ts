@@ -21,12 +21,18 @@ export namespace CreateStudentUseCase {
     ) {}
 
     async execute(input: Input): Promise<Output> {
-      await this.studentsRepository.conflictingCpf(input.cpf);
+      const normalizedInput = {
+        ...input,
+        email: input.email.trim().toLowerCase(),
+        cpf: input.cpf.replace(/\D/g, ""),
+      };
+
+      await this.studentsRepository.conflictingCpf(normalizedInput.cpf);
       await this.studentsRepository.conflictingRa(input.ra);
-      await this.studentsRepository.conflictingEmail(input.email);
+      await this.studentsRepository.conflictingEmail(normalizedInput.email);
 
       const student = this.studentsRepository.create({
-        ...input,
+        ...normalizedInput,
         updated_by: null,
       });
       const createdStudent: StudentOutput =

@@ -15,14 +15,20 @@ export const createStudentBodySchema = z.object({
         .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
         .join(" "),
     ),
-  email: z.email({ error: "Invalid email" }).trim(),
-  cpf: z.string({ error: "CPF is required" }).trim().refine(isValidCpf, {
-    message: "Invalid CPF",
-  }),
+  email: z
+    .email({ error: "Invalid email" })
+    .trim()
+    .transform(value => value.toLowerCase()),
+  cpf: z
+    .string({ error: "CPF is required" })
+    .trim()
+    .transform(normalizeCpf)
+    .refine(isValidCpf, {
+      message: "Invalid CPF",
+    }),
 });
 
 function isValidCpf(cpf: string): boolean {
-  cpf = cpf.replace(/\D/g, "");
   if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
 
   let sum = 0;
@@ -36,4 +42,8 @@ function isValidCpf(cpf: string): boolean {
   remainder = (sum * 10) % 11;
   if (remainder === 10 || remainder === 11) remainder = 0;
   return remainder === parseInt(cpf[10]);
+}
+
+function normalizeCpf(cpf: string): string {
+  return cpf.replace(/\D/g, "");
 }

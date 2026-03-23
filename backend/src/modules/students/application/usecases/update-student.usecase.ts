@@ -21,11 +21,12 @@ export namespace UpdateStudentUseCase {
 
     async execute(input: Input): Promise<Output> {
       const student = await this.studentsRepository.findById(input.id);
+      const normalizedEmail = input.email.trim().toLowerCase();
 
-      await this.studentsRepository.conflictingEmail(input.email, input.id);
+      await this.studentsRepository.conflictingEmail(normalizedEmail, input.id);
 
       student.name = input.name;
-      student.email = input.email;
+      student.email = normalizedEmail;
       student.updated_by = input.updated_by;
 
       const updatedStudent: StudentOutput =

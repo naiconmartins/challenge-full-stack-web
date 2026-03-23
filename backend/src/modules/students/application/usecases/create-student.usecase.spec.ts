@@ -27,7 +27,7 @@ describe("CreateStudentUseCase Unit Tests", () => {
     expect(result.ra).toBe(props.ra);
     expect(result.name).toBe(props.name);
     expect(result.email).toBe(props.email);
-    expect(result.cpf).toBe(props.cpf);
+    expect(result.cpf).toBe(props.cpf.replace(/\D/g, ""));
     expect(spyInsert).toHaveBeenCalledTimes(1);
   });
 
@@ -58,6 +58,42 @@ describe("CreateStudentUseCase Unit Tests", () => {
       sut.execute({
         ...StudentsDataBuilder({}),
         email: props.email,
+        created_by: "user-id-1",
+      }),
+    ).rejects.toBeInstanceOf(ConflictError);
+  });
+
+  it("should not be possible to register a student with the CPF of another student using a different format", async () => {
+    const props = {
+      ...StudentsDataBuilder({ cpf: "529.982.247-25" }),
+      created_by: "user-id-1",
+    };
+    await sut.execute(props);
+
+    await expect(
+      sut.execute({
+        ...StudentsDataBuilder({
+          ra: "99990001",
+          email: "outro@aluno.edu.br",
+          cpf: "52998224725",
+        }),
+        created_by: "user-id-1",
+      }),
+    ).rejects.toBeInstanceOf(ConflictError);
+  });
+
+  it("should not be possible to register a student with the email of another student using different casing", async () => {
+    const props = {
+      ...StudentsDataBuilder({ email: "Aluno@Test.com" }),
+      created_by: "user-id-1",
+    };
+    await sut.execute(props);
+
+    await expect(
+      sut.execute({
+        ...StudentsDataBuilder({
+          email: "aluno@test.com",
+        }),
         created_by: "user-id-1",
       }),
     ).rejects.toBeInstanceOf(ConflictError);

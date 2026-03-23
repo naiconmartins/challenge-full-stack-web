@@ -14,7 +14,10 @@ export const updateStudentBodySchema = z.object({
         .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
         .join(" "),
     ),
-  email: z.email({ error: "Invalid email" }).trim(),
+  email: z
+    .email({ error: "Invalid email" })
+    .trim()
+    .transform(value => value.toLowerCase()),
 });
 
 export const updateStudentParamSchema = z.object({

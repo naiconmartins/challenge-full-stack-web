@@ -52,7 +52,7 @@ describe("createStudentController", () => {
       ra: student.ra,
       name: "Maria Silva",
       email: student.email,
-      cpf: student.cpf,
+      cpf: "52998224725",
       created_by: "user-id-1",
     });
     expect(res.status).toHaveBeenCalledWith(201);
