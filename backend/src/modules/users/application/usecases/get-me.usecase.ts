@@ -1,3 +1,5 @@
+import { NotFoundError } from "@/common/domain/errors/not-found-error";
+import { UnauthorizedError } from "@/common/domain/errors/unauthorized-error";
 import { inject, injectable } from "tsyringe";
 import { UsersRepository } from "../../domain/repositories/users.repository";
 import { toUserOutput, UserOutput } from "../dtos/user-output.dto";
@@ -17,7 +19,16 @@ export namespace GetMeUseCase {
     ) {}
 
     async execute(input: Input): Promise<Output> {
-      const user = await this.usersRepository.findById(input.user_id);
+      let user;
+      try {
+        user = await this.usersRepository.findById(input.user_id);
+      } catch (e) {
+        if (e instanceof NotFoundError) {
+          throw new UnauthorizedError("Invalid token");
+        }
+        throw e;
+      }
+
       return toUserOutput(user);
     }
   }

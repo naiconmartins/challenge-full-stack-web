@@ -1,3 +1,4 @@
+import { UnauthorizedError } from "@/common/domain/errors/unauthorized-error";
 import "reflect-metadata";
 import { UsersInMemoryRepository } from "../../infrastructure/in-memory/repositories/users-in-memory.repository";
 import { UsersDataBuilder } from "../../testing/helpers/users-data-builder";
@@ -26,5 +27,11 @@ describe("GetMeUseCase", () => {
       created_at: user.created_at,
       updated_at: user.updated_at,
     });
+  });
+
+  it("should throw UnauthorizedError when authenticated user no longer exists", async () => {
+    await expect(
+      sut.execute({ user_id: "missing-user-id" }),
+    ).rejects.toStrictEqual(new UnauthorizedError("Invalid token"));
   });
 });

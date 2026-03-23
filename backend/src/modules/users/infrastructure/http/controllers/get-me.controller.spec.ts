@@ -1,3 +1,4 @@
+import { UnauthorizedError } from "@/common/domain/errors/unauthorized-error";
 import { UsersDataBuilder } from "@/modules/users/testing/helpers/users-data-builder";
 import { Request, Response } from "express";
 import "reflect-metadata";
@@ -47,5 +48,29 @@ describe("getMeController", () => {
         role: "ADMINISTRATIVE",
       }),
     );
+  });
+
+  it("should propagate UnauthorizedError when authenticated user is invalid", async () => {
+    const req = {
+      user: {
+        id: "missing-user-id",
+        role: "ADMINISTRATIVE",
+      },
+    } as Request;
+    const res = makeResponse();
+    const error = new UnauthorizedError("Invalid token");
+    const getMeUseCase = {
+      execute: jest.fn().mockRejectedValue(error),
+    };
+
+    jest.spyOn(container, "resolve").mockReturnValue(getMeUseCase as never);
+
+    await expect(getMeController(req, res)).rejects.toStrictEqual(error);
+
+    expect(getMeUseCase.execute).toHaveBeenCalledWith({
+      user_id: "missing-user-id",
+    });
+    expect(res.status).not.toHaveBeenCalled();
+    expect(res.json).not.toHaveBeenCalled();
   });
 });
