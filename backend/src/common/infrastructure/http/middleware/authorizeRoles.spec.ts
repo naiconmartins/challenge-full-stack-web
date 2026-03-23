@@ -5,7 +5,7 @@ import { authorizeRoles } from "./authorizeRoles";
 
 describe("authorizeRoles middleware", () => {
   it("should call next when user role is allowed", () => {
-    const user = UsersDataBuilder({ role: "ATTENDANT" });
+    const user = UsersDataBuilder({ role: "ADMINISTRATIVE" });
     const req = {
       user: {
         id: user.id,
@@ -14,13 +14,13 @@ describe("authorizeRoles middleware", () => {
     } as Request;
     const next = jest.fn() as NextFunction;
 
-    authorizeRoles("ADMIN", "ATTENDANT")(req, {} as Response, next);
+    authorizeRoles("ADMINISTRATIVE")(req, {} as Response, next);
 
     expect(next).toHaveBeenCalledTimes(1);
   });
 
   it("should throw ForbiddenError when user role is not allowed", () => {
-    const user = UsersDataBuilder({ role: "ATTENDANT" });
+    const user = UsersDataBuilder({ role: "ADMINISTRATIVE" });
     const req = {
       user: {
         id: user.id,
@@ -29,7 +29,7 @@ describe("authorizeRoles middleware", () => {
     } as Request;
     const next = jest.fn() as NextFunction;
 
-    expect(() => authorizeRoles("ADMIN")(req, {} as Response, next)).toThrow(
+    expect(() => authorizeRoles()(req, {} as Response, next)).toThrow(
       ForbiddenError,
     );
     expect(next).not.toHaveBeenCalled();

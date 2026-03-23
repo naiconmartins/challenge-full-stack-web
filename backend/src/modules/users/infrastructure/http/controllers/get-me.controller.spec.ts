@@ -20,12 +20,12 @@ describe("getMeController", () => {
 
   it("should call use case with authenticated user id and return 200", async () => {
     const user = UsersDataBuilder({
-      role: "ATTENDANT",
+      role: "ADMINISTRATIVE",
     });
     const req = {
       user: {
         id: user.id,
-        role: "ATTENDANT",
+        role: "ADMINISTRATIVE",
       },
     } as Request;
     const res = makeResponse();
@@ -44,7 +44,7 @@ describe("getMeController", () => {
     expect(res.json).toHaveBeenCalledWith(
       expect.objectContaining({
         id: user.id,
-        role: "ATTENDANT",
+        role: "ADMINISTRATIVE",
       }),
     );
   });

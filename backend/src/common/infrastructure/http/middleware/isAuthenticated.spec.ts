@@ -23,7 +23,7 @@ describe("isAuthenticated middleware", () => {
   });
 
   it("should set request user and call next when token is valid", async () => {
-    const user = UsersDataBuilder({ role: "ATTENDANT" });
+    const user = UsersDataBuilder({ role: "ADMINISTRATIVE" });
     const req = {
       headers: {
         authorization: "Bearer valid.jwt.token",
@@ -68,7 +68,7 @@ describe("isAuthenticated middleware", () => {
   });
 
   it("should throw UnauthorizedError when token payload does not contain user id", async () => {
-    const user = UsersDataBuilder({ role: "ATTENDANT" });
+    const user = UsersDataBuilder({ role: "ADMINISTRATIVE" });
     const req = {
       headers: {
         authorization: "Bearer invalid.jwt.token",
@@ -104,7 +104,7 @@ describe("isAuthenticated middleware", () => {
   });
 
   it("should throw UnauthorizedError when token has been revoked", async () => {
-    const user = UsersDataBuilder({ role: "ADMIN" });
+    const user = UsersDataBuilder({ role: "ADMINISTRATIVE" });
     const req = {
       headers: {
         authorization: "Bearer revoked.jwt.token",

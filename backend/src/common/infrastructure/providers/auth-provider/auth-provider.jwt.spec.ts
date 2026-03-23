@@ -11,7 +11,7 @@ describe("JwtAuthProvider", () => {
   });
 
   it("should generate a token containing user id and role", () => {
-    const user = UsersDataBuilder({ role: "ATTENDANT" });
+    const user = UsersDataBuilder({ role: "ADMINISTRATIVE" });
     const { access_token } = sut.generateAuthKey({
       user_id: user.id,
       role: user.role,

@@ -30,7 +30,7 @@ export class CreateUsers1774052013000 implements MigrationInterface {
           {
             name: "role",
             type: "varchar",
-            default: "'ATTENDANT'",
+            default: "'ADMINISTRATIVE'",
           },
           {
             name: "created_at",

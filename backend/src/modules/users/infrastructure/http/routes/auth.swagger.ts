@@ -38,7 +38,7 @@
  *           format: email
  *         role:
  *           type: string
- *           enum: [ADMIN, ATTENDANT]
+ *           enum: [ADMINISTRATIVE]
  */
 
 /**

@@ -26,9 +26,9 @@
  *           example: "senha123"
  *         role:
  *           type: string
- *           enum: [ADMIN, ATTENDANT]
+ *           enum: [ADMINISTRATIVE]
  *           description: User role
- *           example: ATTENDANT
+ *           example: ADMINISTRATIVE
  *     User:
  *       type: object
  *       properties:
@@ -48,9 +48,9 @@
  *           example: joao.silva@escola.com
  *         role:
  *           type: string
- *           enum: [ADMIN, ATTENDANT]
+ *           enum: [ADMINISTRATIVE]
  *           description: User role
- *           example: ATTENDANT
+ *           example: ADMINISTRATIVE
  *         created_at:
  *           type: string
  *           format: date-time

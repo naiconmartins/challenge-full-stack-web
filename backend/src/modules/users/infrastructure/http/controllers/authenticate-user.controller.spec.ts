@@ -22,7 +22,7 @@ describe("authenticateUserController", () => {
   it("should authenticate the user, generate token with role and return 200", async () => {
     const user = UsersDataBuilder({
       email: "admin@escola.com",
-      role: "ADMIN",
+      role: "ADMINISTRATIVE",
     });
     const req = {
       body: {
@@ -61,7 +61,7 @@ describe("authenticateUserController", () => {
     });
     expect(authProvider.generateAuthKey).toHaveBeenCalledWith({
       user_id: user.id,
-      role: "ADMIN",
+      role: "ADMINISTRATIVE",
     });
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({

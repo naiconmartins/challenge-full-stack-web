@@ -13,7 +13,7 @@ describe("GetMeUseCase", () => {
   });
 
   it("should return authenticated user data with role", async () => {
-    const user = UsersDataBuilder({ role: "ATTENDANT" });
+    const user = UsersDataBuilder({ role: "ADMINISTRATIVE" });
     await repository.insert(user);
 
     const result = await sut.execute({ user_id: user.id });

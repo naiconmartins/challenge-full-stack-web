@@ -8,7 +8,7 @@ const usersRouter: Router = Router();
 usersRouter.post(
   "/",
   isAuthenticated,
-  authorizeRoles("ADMIN"),
+  authorizeRoles("ADMINISTRATIVE"),
   createUserController,
 );
 
