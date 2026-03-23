@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@vue/test-utils'
 import { createVuetify } from 'vuetify'
 import { VApp } from 'vuetify/components'
 import * as components from 'vuetify/components'
@@ -14,7 +14,7 @@ globalThis.ResizeObserver = class ResizeObserver {
 }
 
 const mocks = vi.hoisted(() => ({
-  logout: vi.fn(),
+  logout: vi.fn().mockResolvedValue(undefined),
   push: vi.fn(),
 }))
 
@@ -74,6 +74,7 @@ describe('AppSidebar', () => {
       const listItems = wrapper.findAll('.v-list-item')
       const logoutItem = listItems.find(item => item.text().includes('Sair'))
       await logoutItem!.trigger('click')
+      await flushPromises()
       expect(mocks.logout).toHaveBeenCalledOnce()
     })
 
@@ -82,18 +83,20 @@ describe('AppSidebar', () => {
       const listItems = wrapper.findAll('.v-list-item')
       const logoutItem = listItems.find(item => item.text().includes('Sair'))
       await logoutItem!.trigger('click')
+      await flushPromises()
       expect(mocks.push).toHaveBeenCalledWith({ name: 'login' })
     })
 
     it('calls logout before redirecting', async () => {
       const callOrder: string[] = []
-      mocks.logout.mockImplementation(() => callOrder.push('logout'))
+      mocks.logout.mockImplementation(() => { callOrder.push('logout'); return Promise.resolve() })
       mocks.push.mockImplementation(() => callOrder.push('push'))
 
       const wrapper = mountSidebar()
       const listItems = wrapper.findAll('.v-list-item')
       const logoutItem = listItems.find(item => item.text().includes('Sair'))
       await logoutItem!.trigger('click')
+      await flushPromises()
 
       expect(callOrder).toEqual(['logout', 'push'])
     })

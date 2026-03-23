@@ -5,12 +5,13 @@ import { AppError } from '@/errors/app.error'
 
 const mocks = vi.hoisted(() => ({
   login: vi.fn(),
+  logout: vi.fn(),
   setAuthToken: vi.fn(),
   clearAuthToken: vi.fn(),
 }))
 
 vi.mock('@/services/auth.service', () => ({
-  authService: { login: mocks.login },
+  authService: { login: mocks.login, logout: mocks.logout },
 }))
 
 vi.mock('@/services/http', () => ({
@@ -124,9 +125,35 @@ describe('useAuthStore', () => {
   })
 
   describe('logout', () => {
-    it('should call clearAuthToken', () => {
+    it('should call authService.logout', async () => {
+      mocks.logout.mockResolvedValue(undefined)
       const store = useAuthStore()
-      store.logout()
+      await store.logout()
+
+      expect(mocks.logout).toHaveBeenCalledOnce()
+    })
+
+    it('should call clearAuthToken after revoking token', async () => {
+      mocks.logout.mockResolvedValue(undefined)
+      const store = useAuthStore()
+      await store.logout()
+
+      expect(mocks.clearAuthToken).toHaveBeenCalledOnce()
+    })
+
+    it('should clear token state after revoking', async () => {
+      mocks.logout.mockResolvedValue(undefined)
+      localStorage.setItem('access_token', 'my-token')
+      const store = useAuthStore()
+      await store.logout()
+
+      expect(store.isAuthenticated).toBe(false)
+    })
+
+    it('should clear local token even when service call fails', async () => {
+      mocks.logout.mockRejectedValue(new Error('network error'))
+      const store = useAuthStore()
+      await store.logout().catch(() => {})
 
       expect(mocks.clearAuthToken).toHaveBeenCalledOnce()
     })
