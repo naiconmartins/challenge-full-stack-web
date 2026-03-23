@@ -11,7 +11,7 @@ export function errorHandler(
   if (err instanceof ValidationError) {
     return res.status(err.statusCode).json({
       message: err.message,
-      errors: [err.errors[0]],
+      errors: err.errors,
     });
   }
 

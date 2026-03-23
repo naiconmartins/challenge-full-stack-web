@@ -24,6 +24,10 @@ describe("errorHandler", () => {
         field: "email",
         message: "Invalid email",
       },
+      {
+        field: "name",
+        message: "Name is required",
+      },
     ]);
 
     errorHandler(error, {} as Request, res, jest.fn() as NextFunction);
@@ -31,7 +35,10 @@ describe("errorHandler", () => {
     expect(res.status).toHaveBeenCalledWith(422);
     expect(res.json).toHaveBeenCalledWith({
       message: error.message,
-      errors: [{ field: "email", message: "Invalid email" }],
+      errors: [
+        { field: "email", message: "Invalid email" },
+        { field: "name", message: "Name is required" },
+      ],
     });
   });
 
