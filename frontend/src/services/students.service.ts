@@ -1,4 +1,4 @@
-import { httpClient } from './http'
+import { httpClient } from '@/infra/http'
 import type {
   CreateStudentDto,
   ListStudentsParams,

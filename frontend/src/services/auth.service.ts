@@ -1,4 +1,4 @@
-import { httpClient } from './http'
+import { httpClient } from '@/infra/http'
 import type { LoginCredentials, TokenResponse } from '@/types/auth'
 
 export const authService = {

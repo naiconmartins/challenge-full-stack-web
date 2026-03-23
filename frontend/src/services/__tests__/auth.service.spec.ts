@@ -5,7 +5,7 @@ const mocks = vi.hoisted(() => ({
   post: vi.fn(),
 }))
 
-vi.mock('@/services/http', () => ({
+vi.mock('@/infra/http', () => ({
   httpClient: { post: mocks.post },
 }))
 

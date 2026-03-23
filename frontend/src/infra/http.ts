@@ -4,6 +4,8 @@ import { AppError } from '@/errors/app.error'
 import type { AppErrorCode } from '@/errors/app.error'
 
 export const AUTH_TOKEN_KEY = 'access_token'
+export const SESSION_EXPIRED_KEY = 'session_expired'
+const LOGIN_PATH = '/login'
 
 function resolveErrorCode(status: number): AppErrorCode {
   if (status === 401) return 'UNAUTHORIZED'
@@ -60,6 +62,12 @@ function resolveMessage(status: number, apiMessage?: string): string {
   return translated ?? fallbackMessages[statusKey] ?? 'Ocorreu um erro inesperado. Se o problema persistir, entre em contato com o suporte técnico.'
 }
 
+function redirectToLogin(): void {
+  if (typeof window === 'undefined') return
+  if (window.location.pathname === LOGIN_PATH) return
+  window.location.assign(LOGIN_PATH)
+}
+
 export const httpClient = axios.create({
   baseURL: env.VITE_API_URL,
   headers: { 'Content-Type': 'application/json' },
@@ -70,6 +78,11 @@ httpClient.interceptors.response.use(
   (error) => {
     if (axios.isAxiosError(error) && error.response) {
       const { status, data } = error.response
+      if (status === 401) {
+        sessionStorage.setItem(SESSION_EXPIRED_KEY, 'true')
+        clearAuthToken()
+        redirectToLogin()
+      }
       const message = resolveMessage(status, data?.message)
       const code = resolveErrorCode(status)
       const errors =
@@ -101,4 +114,10 @@ export function setAuthToken(token: string): void {
 
 export function clearAuthToken(): void {
   localStorage.removeItem(AUTH_TOKEN_KEY)
+}
+
+export function consumeSessionExpiredFlag(): boolean {
+  const hasExpired = sessionStorage.getItem(SESSION_EXPIRED_KEY) === 'true'
+  if (hasExpired) sessionStorage.removeItem(SESSION_EXPIRED_KEY)
+  return hasExpired
 }

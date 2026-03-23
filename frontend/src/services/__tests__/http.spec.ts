@@ -5,7 +5,7 @@ vi.mock('@/config/env', () => ({
   env: { VITE_API_URL: 'http://localhost:3000' },
 }))
 
-const { httpClient, setAuthToken, clearAuthToken } = await import('@/services/http')
+const { httpClient, setAuthToken, clearAuthToken, consumeSessionExpiredFlag } = await import('@/infra/http')
 
 const responseHandlers = (httpClient.interceptors.response as any).handlers
 const handleResponseError: (error: unknown) => Promise<never> = responseHandlers[0].rejected
@@ -17,8 +17,13 @@ function makeAxiosError(status: number, data: Record<string, unknown> = {}) {
   return { isAxiosError: true, response: { status, data } }
 }
 
+const assignSpy = vi.spyOn(window.location, 'assign').mockImplementation(() => {})
+
 describe('setAuthToken / clearAuthToken', () => {
-  beforeEach(() => localStorage.clear())
+  beforeEach(() => {
+    localStorage.clear()
+    sessionStorage.clear()
+  })
 
   it('stores the token in localStorage', () => {
     setAuthToken('my-token')
@@ -33,11 +38,27 @@ describe('setAuthToken / clearAuthToken', () => {
 })
 
 describe('response interceptor', () => {
+  beforeEach(() => {
+    localStorage.clear()
+    sessionStorage.clear()
+    assignSpy.mockClear()
+  })
+
   it('maps 401 to UNAUTHORIZED AppError', async () => {
     const err = await handleResponseError(makeAxiosError(401)).catch(e => e)
     expect(err).toBeInstanceOf(AppError)
     expect(err.code).toBe('UNAUTHORIZED')
     expect(err.statusCode).toBe(401)
+  })
+
+  it('clears the auth token and redirects to login on 401', async () => {
+    localStorage.setItem('access_token', 'abc123')
+
+    await handleResponseError(makeAxiosError(401)).catch(e => e)
+
+    expect(localStorage.getItem('access_token')).toBeNull()
+    expect(sessionStorage.getItem('session_expired')).toBe('true')
+    expect(assignSpy).toHaveBeenCalledWith('/login')
   })
 
   it('maps 404 to NOT_FOUND AppError', async () => {
@@ -113,6 +134,21 @@ describe('response interceptor', () => {
 
   it('always rejects (never resolves)', async () => {
     await expect(handleResponseError(makeAxiosError(401))).rejects.toBeInstanceOf(AppError)
+  })
+})
+
+describe('consumeSessionExpiredFlag', () => {
+  beforeEach(() => sessionStorage.clear())
+
+  it('returns true once and removes the session expired flag', () => {
+    sessionStorage.setItem('session_expired', 'true')
+
+    expect(consumeSessionExpiredFlag()).toBe(true)
+    expect(sessionStorage.getItem('session_expired')).toBeNull()
+  })
+
+  it('returns false when the session expired flag is absent', () => {
+    expect(consumeSessionExpiredFlag()).toBe(false)
   })
 })
 

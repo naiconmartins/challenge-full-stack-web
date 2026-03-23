@@ -4,6 +4,7 @@ import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth.store'
 import { useFormRules } from '@/composables/shared/useFormRules'
 import { AppError } from '@/errors/app.error'
+import { consumeSessionExpiredFlag } from '@/infra/http'
 
 export function useLoginForm() {
   const router = useRouter()
@@ -24,6 +25,10 @@ export function useLoginForm() {
     email: [],
     password: [],
   })
+
+  if (consumeSessionExpiredFlag()) {
+    errorMessage.value = 'Sua sessão expirou. Faça login novamente.'
+  }
 
   const emailRules = [required('E-mail'), email]
   const passwordRules = [required('Senha'), minLength(6)]

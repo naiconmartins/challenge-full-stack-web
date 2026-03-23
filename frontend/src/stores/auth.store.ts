@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { authService } from '@/services/auth.service'
-import { setAuthToken, clearAuthToken, AUTH_TOKEN_KEY } from '@/services/http'
+import { setAuthToken, clearAuthToken, AUTH_TOKEN_KEY } from '@/infra/http'
 import type { LoginCredentials } from '@/types/auth'
 import { AppError } from '@/errors/app.error'
 

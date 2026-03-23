@@ -18,6 +18,7 @@ const mocks = vi.hoisted(() => ({
   isLoading: false,
   emailErrors: [] as string[],
   passwordErrors: [] as string[],
+  consumedSessionExpiredFlag: false,
 }))
 
 vi.mock('@/composables/auth/useLoginForm', async () => {
@@ -36,6 +37,10 @@ vi.mock('@/composables/auth/useLoginForm', async () => {
     }),
   }
 })
+
+vi.mock('@/infra/http', () => ({
+  consumeSessionExpiredFlag: () => false,
+}))
 
 const vuetify = createVuetify({ components, directives })
 
