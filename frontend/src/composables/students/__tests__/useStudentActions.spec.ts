@@ -137,7 +137,7 @@ describe('useStudentActions', () => {
       openDeleteDialog(mockStudent)
       await confirmDelete(() => {})
 
-      expect(deleteError.value).toBe('Erro ao excluir aluno.')
+      expect(deleteError.value).toBe('Não foi possível excluir o aluno. Se o problema persistir, entre em contato com o suporte.')
     })
 
     it('does not call onSuccess on failure', async () => {

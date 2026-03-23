@@ -39,6 +39,7 @@
       v-model="deleteDialog"
       :student="selectedStudent"
       :loading="isDeleting"
+      :error="deleteError"
       @confirm="confirmDelete(() => fetchStudents())"
       @cancel="closeDeleteDialog"
     />
@@ -75,6 +76,7 @@ const {
   deleteDialog,
   selectedStudent,
   isDeleting,
+  deleteError,
   openDeleteDialog,
   closeDeleteDialog,
   confirmDelete,

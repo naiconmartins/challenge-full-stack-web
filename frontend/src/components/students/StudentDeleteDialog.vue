@@ -12,6 +12,16 @@
           <span class="font-semibold">{{ student?.name }}</span>?
           Esta ação não pode ser desfeita.
         </p>
+        <v-alert
+          v-if="error"
+          type="error"
+          variant="tonal"
+          color="#FF002B"
+          density="compact"
+          class="mt-3 text-sm"
+        >
+          {{ error }}
+        </v-alert>
       </v-card-text>
 
       <v-card-actions class="px-6 pb-5 gap-2">
@@ -33,6 +43,7 @@ import type { Student } from '@/types/student'
 defineProps<{
   student?: Student | null
   loading?: boolean
+  error?: string | null
 }>()
 
 const emit = defineEmits<{
