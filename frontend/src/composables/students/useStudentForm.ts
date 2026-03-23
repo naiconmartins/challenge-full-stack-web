@@ -1,9 +1,13 @@
-import { ref, reactive, computed, onMounted, type ComponentPublicInstance } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { studentsService } from '@/services/students.service'
 import { useFormRules } from '@/composables/shared/useFormRules'
 import { useNotification } from '@/composables/shared/useNotification'
 import { AppError } from '@/errors/app.error'
+
+interface FormController {
+  validate: () => Promise<{ valid: boolean }>
+}
 
 export function useStudentForm() {
   const route = useRoute()
@@ -14,10 +18,11 @@ export function useStudentForm() {
   const isEditMode = computed(() => !!route.params.id)
   const studentId = computed(() => route.params.id as string)
 
-  const formRef = ref<ComponentPublicInstance & { validate: () => Promise<{ valid: boolean }> } | null>(null)
+  const formRef = ref<FormController | null>(null)
   const isLoading = ref(false)
   const isFetching = ref(false)
   const errorMessage = ref('')
+  const loadFailed = ref(false)
 
   const form = reactive({
     ra: '',
@@ -50,6 +55,7 @@ export function useStudentForm() {
 
     isFetching.value = true
     errorMessage.value = ''
+    loadFailed.value = false
     try {
       const student = await studentsService.getById(studentId.value)
       form.ra = student.ra
@@ -57,6 +63,7 @@ export function useStudentForm() {
       form.email = student.email
       form.cpf = student.cpf
     } catch (err) {
+      loadFailed.value = true
       errorMessage.value = AppError.isAppError(err)
         ? err.message
         : 'Não foi possível carregar os dados do aluno. Se o problema persistir, entre em contato com o suporte.'
@@ -66,6 +73,8 @@ export function useStudentForm() {
   }
 
   async function handleSubmit(): Promise<void> {
+    if (!formRef.value || loadFailed.value) return
+
     clearFieldErrors()
     errorMessage.value = ''
 
@@ -110,6 +119,10 @@ export function useStudentForm() {
     router.push({ name: 'home' })
   }
 
+  async function retryLoadStudent(): Promise<void> {
+    await loadStudent()
+  }
+
   onMounted(() => loadStudent())
 
   return {
@@ -119,6 +132,7 @@ export function useStudentForm() {
     isEditMode,
     isLoading,
     isFetching,
+    loadFailed,
     errorMessage,
     raRules,
     nameRules,
@@ -126,5 +140,6 @@ export function useStudentForm() {
     cpfRules,
     handleSubmit,
     handleCancel,
+    retryLoadStudent,
   }
 }

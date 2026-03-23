@@ -18,6 +18,37 @@
             <v-progress-circular indeterminate color="#5865f2" />
           </div>
 
+          <div v-else-if="loadFailed" class="py-4">
+            <v-alert
+              type="error"
+              color="#FF002B"
+              variant="tonal"
+              class="mb-6"
+            >
+              {{ errorMessage }}
+            </v-alert>
+
+            <div class="flex justify-end gap-3">
+              <v-btn
+                variant="outlined"
+                color="#1B2731"
+                size="large"
+                @click="handleCancel"
+              >
+                Voltar
+              </v-btn>
+
+              <v-btn
+                color="#FF002B"
+                variant="flat"
+                size="large"
+                @click="retryLoadStudent"
+              >
+                Tentar novamente
+              </v-btn>
+            </div>
+          </div>
+
           <v-form v-else ref="formRef" @submit.prevent="handleSubmit">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
               <v-text-field
@@ -126,6 +157,7 @@ const {
   isEditMode,
   isLoading,
   isFetching,
+  loadFailed,
   errorMessage,
   raRules,
   nameRules,
@@ -133,5 +165,6 @@ const {
   cpfRules,
   handleSubmit,
   handleCancel,
+  retryLoadStudent,
 } = useStudentForm()
 </script>

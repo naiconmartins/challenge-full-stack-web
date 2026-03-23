@@ -20,6 +20,8 @@ export function useStudentList() {
       const response: StudentListResponse = await studentsService.list({
         page: currentPage.value,
         per_page: perPage.value,
+        sort: 'name',
+        sort_dir: 'asc',
         ...params,
       })
       students.value = response.items

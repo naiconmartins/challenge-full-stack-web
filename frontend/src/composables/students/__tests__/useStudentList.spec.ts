@@ -101,14 +101,19 @@ describe('useStudentList', () => {
       expect(isLoading.value).toBe(false)
     })
 
-    it('passes page and per_page to the service', async () => {
+    it('passes page, per_page and default sorting by name to the service', async () => {
       mocks.list.mockResolvedValue(mockListResponse)
 
       const { fetchStudents } = useStudentList()
       await fetchStudents()
 
       expect(mocks.list).toHaveBeenCalledWith(
-        expect.objectContaining({ page: 1, per_page: 10 }),
+        expect.objectContaining({
+          page: 1,
+          per_page: 10,
+          sort: 'name',
+          sort_dir: 'asc',
+        }),
       )
     })
   })

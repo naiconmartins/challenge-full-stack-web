@@ -17,9 +17,11 @@ const mocks = vi.hoisted(() => ({
   isEditMode: false,
   isFetching: false,
   isLoading: false,
+  loadFailed: false,
   errorMessage: '',
   form: { ra: '', name: '', email: '', cpf: '' },
   fieldErrors: { ra: [] as string[], name: [] as string[], email: [] as string[], cpf: [] as string[] },
+  retryLoadStudent: vi.fn(),
 }))
 
 vi.mock('@/composables/students/useStudentForm', async () => {
@@ -32,6 +34,7 @@ vi.mock('@/composables/students/useStudentForm', async () => {
       isEditMode: computed(() => mocks.isEditMode),
       isLoading: ref(mocks.isLoading),
       isFetching: ref(mocks.isFetching),
+      loadFailed: ref(mocks.loadFailed),
       errorMessage: ref(mocks.errorMessage),
       raRules: [],
       nameRules: [],
@@ -39,6 +42,7 @@ vi.mock('@/composables/students/useStudentForm', async () => {
       cpfRules: [],
       handleSubmit: mocks.handleSubmit,
       handleCancel: mocks.handleCancel,
+      retryLoadStudent: mocks.retryLoadStudent,
     }),
   }
 })
@@ -69,6 +73,7 @@ describe('StudentFormView', () => {
     mocks.isEditMode = false
     mocks.isFetching = false
     mocks.isLoading = false
+    mocks.loadFailed = false
     mocks.errorMessage = ''
     mocks.form = { ra: '', name: '', email: '', cpf: '' }
     mocks.fieldErrors = { ra: [], name: [], email: [], cpf: [] }
@@ -164,6 +169,31 @@ describe('StudentFormView', () => {
       mocks.fieldErrors.email = ['E-mail inválido']
       const wrapper = mountForm()
       expect(wrapper.text()).toContain('E-mail inválido')
+    })
+  })
+
+  describe('load failure state', () => {
+    it('shows retry state instead of the form when student loading fails', () => {
+      mocks.loadFailed = true
+      mocks.errorMessage = 'Não encontrado'
+
+      const wrapper = mountForm()
+
+      expect(wrapper.text()).toContain('Não encontrado')
+      expect(wrapper.text()).toContain('Tentar novamente')
+      expect(wrapper.find('form').exists()).toBe(false)
+    })
+
+    it('calls retryLoadStudent when retry button is clicked', async () => {
+      mocks.loadFailed = true
+      mocks.errorMessage = 'Não encontrado'
+
+      const wrapper = mountForm()
+      const retryBtn = wrapper.findAll('button').find(b => b.text().includes('Tentar novamente'))
+
+      await retryBtn!.trigger('click')
+
+      expect(mocks.retryLoadStudent).toHaveBeenCalledOnce()
     })
   })
 
