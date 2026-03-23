@@ -1,5 +1,4 @@
 @layer tailwind-theme;
-@layer tailwind-reset;
 
 @layer vuetify-core;
 @layer vuetify-components;

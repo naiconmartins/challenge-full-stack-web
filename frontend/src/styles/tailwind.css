@@ -1,11 +1,10 @@
 @import "tailwindcss/theme" layer(tailwind-theme);
-@import "tailwindcss/preflight" layer(tailwind-reset);
 @import "tailwindcss/utilities" layer(tailwind-utilities);
 
 @theme {
   --font-heading: "Poppins", sans-serif;
   --font-body: "Poppins", sans-serif;
-  --font-mono: "Roboto Mono", monospace;
+  --font-mono: ui-monospace, "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
 
   --color-background: rgb(var(--v-theme-background));
   --color-surface: rgb(var(--v-theme-surface));
