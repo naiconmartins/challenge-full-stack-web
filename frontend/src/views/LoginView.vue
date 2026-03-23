@@ -17,8 +17,9 @@
             :error-messages="fieldErrors.email" :disabled="isLoading" autocomplete="email" class="mb-2" />
 
           <v-text-field v-model="form.password" label="Senha" :type="showPassword ? 'text' : 'password'"
-            placeholder="••••••••" prepend-inner-icon="mdi-lock-outline" :append-inner-icon="showPassword ? 'mdi-eye-off-outline' : 'mdi-eye-outline'
-              " variant="outlined" :rules="passwordRules" :error-messages="fieldErrors.password" :disabled="isLoading"
+            placeholder="••••••••" prepend-inner-icon="mdi-lock-outline" :append-inner-icon="showPassword ? 'mdi-eye-off-outline' : 'mdi-eye-outline'"
+            :append-inner-icon-aria-label="showPassword ? 'Ocultar senha' : 'Exibir senha'"
+            variant="outlined" :rules="passwordRules" :error-messages="fieldErrors.password" :disabled="isLoading"
             autocomplete="current-password" class="mb-4" @click:append-inner="showPassword = !showPassword" />
 
           <v-alert v-if="errorMessage" type="error" color="#FF002B" variant="tonal" density="compact"

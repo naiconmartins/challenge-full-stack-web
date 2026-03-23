@@ -36,6 +36,7 @@
         <div class="flex items-center justify-center gap-1">
           <v-btn
             icon="mdi-pencil-outline"
+            :aria-label="`Editar aluno ${item.name}`"
             variant="text"
             size="small"
             color="#1B2731"
@@ -43,6 +44,7 @@
           />
           <v-btn
             icon="mdi-trash-can-outline"
+            :aria-label="`Excluir aluno ${item.name}`"
             variant="text"
             size="small"
             color="#FF0545"

@@ -3,6 +3,7 @@
     <v-text-field
       v-model="model"
       placeholder="Buscar por nome, CPF ou RA..."
+      aria-label="Buscar alunos"
       prepend-inner-icon="mdi-magnify"
       variant="outlined"
       density="compact"
