@@ -1,75 +1,121 @@
-# grupoa
+# +A Educação Challenge Frontend
 
-Scaffolded with Vuetify CLI.
+Frontend do desafio **+A Educação - Full Stack Web Developer**, responsável pelo fluxo administrativo de gestão de alunos.
 
-## ❗️ Documentation
+O projeto implementa a interface para:
 
-- Primary docs: https://vuetifyjs.com/
-- Getting started guide: https://vuetifyjs.com/en/getting-started/installation/
-- Community support: https://community.vuetifyjs.com/
-- Issue tracker: https://issues.vuetifyjs.com/
+- autenticação do usuário;
+- listagem de alunos;
+- cadastro de aluno;
+- edição de aluno;
+- exclusão com confirmação;
+- tratamento de erros e notificações de sucesso.
 
-## 🧱 Stack
+## Stack
 
-- Framework: Vue 3 + Vite
-- UI Library: Vuetify
-- Language: TypeScript
-- Package manager: pnpm
-
-## 🧭 Start Here
-
-- Main entry: `src/main.ts`
-- Main app component: `src/App.vue`
-- Main styles: `src/styles/`
-- Plugin setup: `src/plugins/`
-
-## 📁 Project Structure
-
-- `src/main.ts` — application entry point
-- `src/App.vue` — root component
-- `src/components/` — reusable Vue components
-- `src/plugins/` — plugin registration and setup
-- `src/styles/` — global styles and theme settings
-- `public/` — static public files
-
-## ✨ Enabled Features
-
+- Vue 3
+- Vite
+- TypeScript
+- Vuetify
 - Tailwind CSS
+- Pinia
+- Vue Router
+- Axios
+- Vitest
 
-## 💿 Install
+## Requisitos
 
-Use your selected package manager (pnpm) to install dependencies:
+- Node.js 22+ recomendado
+- pnpm
+
+## Configuração
+
+Crie um arquivo `.env` na raiz do projeto com a URL da API:
+
+```env
+VITE_API_URL=http://localhost:3333
+```
+
+Essa variável é validada em tempo de execução em [src/config/env.ts](./src/config/env.ts).
+
+## Instalação
 
 ```bash
 pnpm install
 ```
 
-## 🚀 Quick Start
+## Executando em desenvolvimento
 
 ```bash
-pnpm install
 pnpm dev
 ```
 
-## 🏗️ Build
+A aplicação sobe por padrão na porta `3000`.
+
+## Scripts
+
+- `pnpm dev`: inicia o servidor de desenvolvimento
+- `pnpm build`: executa `type-check` e build de produção
+- `pnpm build-only`: gera o build sem rodar o `type-check`
+- `pnpm preview`: publica localmente o build gerado
+- `pnpm type-check`: valida a tipagem TypeScript com `vue-tsc`
+- `pnpm test`: executa os testes unitários
+- `pnpm test:watch`: executa os testes em modo watch
+
+## Estrutura
+
+- `src/views/`: telas principais da aplicação
+- `src/components/`: componentes reutilizáveis de interface
+- `src/composables/`: lógica de estado e comportamento por fluxo
+- `src/services/`: integração com API orientada ao domínio
+- `src/infra/`: infraestrutura compartilhada, como cliente HTTP
+- `src/stores/`: estado global com Pinia
+- `src/router/`: definição de rotas e guards
+- `src/styles/`: estilos globais e configuração visual
+- `src/types/`: contratos TypeScript
+
+## Fluxos principais
+
+### Login
+
+- autenticação via API;
+- persistência do token de acesso;
+- guard para rotas autenticadas;
+- tratamento central de expiração de sessão com redirecionamento para `/login`.
+
+### Alunos
+
+- listagem paginada;
+- busca por termo;
+- criação com validação de campos obrigatórios;
+- edição com `RA` e `CPF` bloqueados;
+- exclusão com modal de confirmação;
+- mensagens globais de sucesso e erro.
+
+## Arquitetura resumida
+
+O frontend foi organizado para separar responsabilidades:
+
+- `views` compõem a tela;
+- `components` encapsulam a UI;
+- `composables` concentram regras de fluxo;
+- `services` encapsulam acesso HTTP;
+- `stores` guardam estado global de autenticação.
+
+Essa divisão facilita teste, manutenção e leitura do fluxo.
+
+## Testes e qualidade
+
+Comandos principais de validação:
 
 ```bash
-pnpm build
+pnpm type-check
+pnpm test -- --runInBand
+pnpm build-only
 ```
 
-## 🧪 Available Scripts
+## Observações
 
-- `pnpm dev`
-- `pnpm build`
-- `pnpm preview`
-- `pnpm build-only`
-- `pnpm type-check`
-
-## 💪 Support Vuetify Development
-
-This project uses Vuetify - an MIT licensed Open Source project. We are glad to welcome contributors and any support for ongoing development:
-
-- Contribute to Vuetify and ecosystem projects: https://github.com/vuetifyjs
-- Request enterprise support: https://support.vuetifyjs.com/
-- Sponsor on GitHub: https://github.com/sponsors/vuetifyjs
-- Support on Open Collective: https://opencollective.com/vuetify
+- O frontend depende do backend para autenticação, autorização e persistência.
+- O tratamento de expiração de sessão no frontend está centralizado no cliente HTTP.
+- As decisões de arquitetura e observações de entrega estão documentadas em [COMMENTS.md](./COMMENTS.md).
