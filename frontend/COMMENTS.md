@@ -1,4 +1,4 @@
-# COMMENTS
+# COMMENTS FRONT-END
 
 ## Decisão de arquitetura utilizada
 
