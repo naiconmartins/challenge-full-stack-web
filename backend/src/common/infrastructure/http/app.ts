@@ -5,6 +5,8 @@ import swaggerUi from "swagger-ui-express";
 import { errorHandler } from "./middleware/errorHandlers";
 import { routes } from "./route";
 
+const swaggerApis = ["./src/**/http/routes/*.swagger.ts"];
+
 const options = {
   definition: {
     openapi: "3.0.0",
@@ -23,7 +25,7 @@ const options = {
       },
     },
   },
-  apis: ["./src/**/http/routes/*.ts"],
+  apis: swaggerApis,
 };
 const swaggerSpec = swaggerJSDoc(options);
 

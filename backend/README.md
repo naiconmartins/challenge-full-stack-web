@@ -67,6 +67,8 @@ JWT_SECRET=my_secret
 JWT_EXPIRES_IN=86400
 ```
 
+Para testes automatizados em pipeline/container, há também um arquivo base `.env.test.example`.
+
 ## Instalação
 
 ```bash
@@ -84,6 +86,12 @@ Depois execute as migrations:
 pnpm migration:run
 ```
 
+Para popular dados iniciais:
+
+```bash
+pnpm seed:run
+```
+
 ## Subindo a aplicação
 
 Ambiente de desenvolvimento:
@@ -97,6 +105,13 @@ Build de produção:
 ```bash
 pnpm build
 pnpm start
+```
+
+Migrations e seed em runtime de produção:
+
+```bash
+pnpm migration:run:prod
+pnpm seed:run:prod
 ```
 
 Servidor padrão:

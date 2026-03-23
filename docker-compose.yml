@@ -1,0 +1,88 @@
+x-backend-build: &backend-build
+  context: ./backend
+  dockerfile: Dockerfile
+  target: runtime
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: challenge-postgres
+    environment:
+      POSTGRES_DB: grupoa
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d grupoa"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  backend-migrate:
+    image: challenge-full-stack-backend:local
+    pull_policy: never
+    build: *backend-build
+    environment: &backend-env
+      NODE_ENV: production
+      PORT: 3333
+      DB_TYPE: postgres
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_SCHEMA: public
+      DB_NAME: grupoa
+      DB_USER: postgres
+      DB_PASS: postgres
+      JWT_SECRET: my_secret
+      JWT_EXPIRES_IN: 86400
+      SEED_ADMIN_NAME: Usuário Administrativo
+      SEED_ADMIN_EMAIL: admin@grupoa.com.br
+      SEED_ADMIN_PASSWORD: admin@123
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: ["pnpm", "migration:run:prod"]
+    restart: "no"
+
+  backend-seed:
+    image: challenge-full-stack-backend:local
+    pull_policy: never
+    build: *backend-build
+    environment: *backend-env
+    depends_on:
+      backend-migrate:
+        condition: service_completed_successfully
+    command: ["pnpm", "seed:run:prod"]
+    restart: "no"
+
+  backend:
+    image: challenge-full-stack-backend:local
+    pull_policy: never
+    build: *backend-build
+    environment: *backend-env
+    depends_on:
+      backend-seed:
+        condition: service_completed_successfully
+    ports:
+      - "3333:3333"
+    restart: unless-stopped
+
+  frontend:
+    image: challenge-full-stack-frontend:local
+    pull_policy: never
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: http://localhost:3333
+    depends_on:
+      backend:
+        condition: service_started
+    ports:
+      - "3000:80"
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
