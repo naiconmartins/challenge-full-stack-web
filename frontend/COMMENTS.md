@@ -23,6 +23,10 @@ Essa estrutura reduz acoplamento entre interface e integração com API, facilit
 - `happy-dom` como ambiente de execução dos testes.
 - `@mdi/font` para ícones.
 
+## Observação sobre Git
+
+O desenvolvimento deste desafio foi conduzido diretamente na branch `main`, com foco em commits semânticos e agrupados por contexto de alteração. Em um cenário de equipe, eu adotaria branches curtas por funcionalidade e revisão via pull request.
+
 ## O que eu melhoraria se tivesse mais tempo
 
 - Adicionaria testes E2E cobrindo login, listagem, criação, edição e exclusão.
