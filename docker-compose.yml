@@ -8,13 +8,13 @@ services:
     image: postgres:16-alpine
     container_name: challenge-postgres
     environment:
-      POSTGRES_DB: grupoa
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "5433:5432"
+      - "${POSTGRES_EXTERNAL_PORT}:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d grupoa"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 20
@@ -26,20 +26,20 @@ services:
     pull_policy: never
     build: *backend-build
     environment: &backend-env
-      NODE_ENV: production
-      PORT: 3333
-      DB_TYPE: postgres
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_SCHEMA: public
-      DB_NAME: grupoa
-      DB_USER: postgres
-      DB_PASS: postgres
-      JWT_SECRET: my_secret
-      JWT_EXPIRES_IN: 86400
-      SEED_ADMIN_NAME: Usuário Administrativo
-      SEED_ADMIN_EMAIL: admin@grupoa.com.br
-      SEED_ADMIN_PASSWORD: admin@123
+      NODE_ENV: ${NODE_ENV}
+      PORT: ${BACKEND_PORT}
+      DB_TYPE: ${DB_TYPE}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_SCHEMA: ${DB_SCHEMA}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN}
+      SEED_ADMIN_NAME: ${SEED_ADMIN_NAME}
+      SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD}
     depends_on:
       postgres:
         condition: service_healthy
@@ -66,7 +66,7 @@ services:
       backend-seed:
         condition: service_completed_successfully
     ports:
-      - "3333:3333"
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
     restart: unless-stopped
 
   frontend:
@@ -76,12 +76,12 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        VITE_API_URL: http://localhost:3333
+        VITE_API_URL: ${VITE_API_URL}
     depends_on:
       backend:
         condition: service_started
     ports:
-      - "3000:80"
+      - "${FRONTEND_PORT}:80"
     restart: unless-stopped
 
 volumes:
