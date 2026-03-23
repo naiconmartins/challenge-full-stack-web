@@ -4,12 +4,15 @@ import tseslint from "typescript-eslint";
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
 
 export default [
+  {
+    ignores: ["dist/**", "build/**", "node_modules/**"],
+  },
   { files: ["**/*.{js,mjs,cjs,ts}"] },
   { languageOptions: { globals: globals.browser } },
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    files: ["**/*.js", "dist", "build", "node_modules"],
+    files: ["**/*.js"],
     ...tseslint.configs.disableTypeChecked,
   },
   eslintPluginPrettierRecommended,

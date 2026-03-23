@@ -2,7 +2,7 @@ import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { Student } from "./src/modules/students/infrastructure/typeorm/entities/student.entity";
 import { StudentsDataBuilder } from "./src/modules/students/testing/helpers/students-data-builder";
-import { UserToken } from "./src/modules/users/infrastructure/typeorm/entities/user-tokens.entity";
+import { RevokedToken } from "./src/modules/users/infrastructure/typeorm/entities/revoked-token.entity";
 import { User } from "./src/modules/users/infrastructure/typeorm/entities/users.entity";
 import { UsersDataBuilder } from "./src/modules/users/testing/helpers/users-data-builder";
 
@@ -14,7 +14,7 @@ const testDataSource = new DataSource({
   database: process.env.DB_NAME ?? "grupoa",
   username: process.env.DB_USER ?? "postgres",
   password: process.env.DB_PASS ?? "postgres",
-  entities: [User, UserToken, Student],
+  entities: [User, RevokedToken, Student],
   synchronize: false,
   logging: false,
 });
