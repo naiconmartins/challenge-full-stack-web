@@ -79,7 +79,7 @@ O seed do backend está em [backend/src/scripts/seed.ts](./backend/src/scripts/s
 Esse script cria ou atualiza:
 
 - um usuário administrativo inicial;
-- uma carga inicial de alunos brasileiros.
+- uma carga inicial de alunos.
 
 O comportamento é idempotente por meio de `upsert`, evitando duplicação caso o processo seja executado novamente.
 
