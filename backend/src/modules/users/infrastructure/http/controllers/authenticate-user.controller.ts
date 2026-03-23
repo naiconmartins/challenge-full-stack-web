@@ -18,7 +18,10 @@ export async function authenticateUserController(
 
   const authProvider: AuthProvider = container.resolve("AuthProvider");
 
-  const { access_token } = authProvider.generateAuthKey(user.id);
+  const { access_token } = authProvider.generateAuthKey({
+    user_id: user.id,
+    role: user.role,
+  });
 
   return response.status(200).json({ access_token });
 }

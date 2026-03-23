@@ -26,11 +26,13 @@ describe("CreateUserUseCase Integration Tests", () => {
       name: userData.name,
       email: userData.email,
       password: "123456",
+      role: "ATTENDANT",
     });
 
     expect(result).toHaveProperty("id");
     expect(result.name).toBe(userData.name);
     expect(result.email).toBe(userData.email);
+    expect(result.role).toBe("ATTENDANT");
     expect(result).not.toHaveProperty("password");
     expect(result).toHaveProperty("created_at");
     expect(result).toHaveProperty("updated_at");
@@ -45,6 +47,7 @@ describe("CreateUserUseCase Integration Tests", () => {
       name: userData.name,
       email: userData.email,
       password: "123456",
+      role: "ATTENDANT",
     });
 
     const storedUser = await repository.findByEmail(userData.email);
@@ -68,6 +71,7 @@ describe("CreateUserUseCase Integration Tests", () => {
         name: userData.name,
         email: userData.email,
         password: "123456",
+        role: "ATTENDANT",
       }),
     ).rejects.toBeInstanceOf(ConflictError);
   });

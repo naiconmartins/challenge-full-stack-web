@@ -17,7 +17,7 @@ export async function isAuthenticated(
 
   const [, access_token] = authHeader.split(" ");
   const authProvider: AuthProvider = container.resolve("AuthProvider");
-  const { user_id } = authProvider.verifiyAuthKey(access_token);
+  const { user_id, role } = authProvider.verifiyAuthKey(access_token);
   if (!user_id) {
     throw new UnauthorizedError("Invalid token");
   }
@@ -32,6 +32,7 @@ export async function isAuthenticated(
 
   req.user = {
     id: user_id,
+    role,
   };
 
   return next();

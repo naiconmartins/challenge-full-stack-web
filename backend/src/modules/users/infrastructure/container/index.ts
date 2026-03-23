@@ -2,6 +2,7 @@ import { dataSource } from "@/common/infrastructure/typeorm";
 import { container } from "tsyringe";
 import { AuthenticateUserUseCase } from "../../application/usecases/authenticate-user.usecase";
 import { CreateUserUseCase } from "../../application/usecases/create-user.usecase";
+import { GetMeUseCase } from "../../application/usecases/get-me.usecase";
 import { LogoutUserUseCase } from "../../application/usecases/logout-user.usecase";
 import { RevokedToken } from "../typeorm/entities/revoked-token.entity";
 import { User } from "../typeorm/entities/users.entity";
@@ -21,6 +22,8 @@ container.registerSingleton(
   "AuthenticateUserUseCase",
   AuthenticateUserUseCase.UseCase,
 );
+
+container.registerSingleton("GetMeUseCase", GetMeUseCase.UseCase);
 
 container.registerSingleton(
   "RevokedTokensRepository",

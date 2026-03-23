@@ -9,6 +9,7 @@ export function UsersDataBuilder(props: Props): UserModel {
     name: props.name ?? "Test User",
     email: props.email ?? `test-${randomUUID()}@aluno.edu.br`,
     password: props.password ?? "hashed_password",
+    role: props.role ?? "ATTENDANT",
     created_at: props.created_at ?? new Date(),
     updated_at: props.updated_at ?? new Date(),
   };

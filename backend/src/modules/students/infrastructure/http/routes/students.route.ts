@@ -1,3 +1,4 @@
+import { authorizeRoles } from "@/common/infrastructure/http/middleware/authorizeRoles";
 import { isAuthenticated } from "@/common/infrastructure/http/middleware/isAuthenticated";
 import { Router } from "express";
 import { createStudentController } from "../controllers/create-student.controller";
@@ -8,10 +9,35 @@ import { updateStudentController } from "../controllers/update-student.controlle
 
 const studentsRouter: Router = Router();
 
-studentsRouter.post("/", isAuthenticated, createStudentController);
-studentsRouter.put("/:id", isAuthenticated, updateStudentController);
-studentsRouter.get("/", isAuthenticated, searchStudentController);
-studentsRouter.get("/:id", isAuthenticated, getStudentController);
-studentsRouter.delete("/:id", isAuthenticated, deleteStudentController);
+studentsRouter.post(
+  "/",
+  isAuthenticated,
+  authorizeRoles("ADMIN", "ATTENDANT"),
+  createStudentController,
+);
+studentsRouter.put(
+  "/:id",
+  isAuthenticated,
+  authorizeRoles("ADMIN", "ATTENDANT"),
+  updateStudentController,
+);
+studentsRouter.get(
+  "/",
+  isAuthenticated,
+  authorizeRoles("ADMIN", "ATTENDANT"),
+  searchStudentController,
+);
+studentsRouter.get(
+  "/:id",
+  isAuthenticated,
+  authorizeRoles("ADMIN", "ATTENDANT"),
+  getStudentController,
+);
+studentsRouter.delete(
+  "/:id",
+  isAuthenticated,
+  authorizeRoles("ADMIN"),
+  deleteStudentController,
+);
 
 export { studentsRouter };

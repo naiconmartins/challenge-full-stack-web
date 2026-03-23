@@ -25,6 +25,20 @@
  *           type: string
  *           description: JWT token for authenticating subsequent requests
  *           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MjAwMTYzOTMsImV4cCI6MTcyMDEwMjc5Mywic3ViIjoiNDhhNmVhODUtMDRmNS00NGRjLWExOTItZjQ3MDMwNzg2M2RmIn0.i2e7TQ5dSY7dhdL0kldySVOeYiLHC75OVo7P4yvBGmw
+ *     MeResponse:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           format: uuid
+ *         name:
+ *           type: string
+ *         email:
+ *           type: string
+ *           format: email
+ *         role:
+ *           type: string
+ *           enum: [ADMIN, ATTENDANT]
  */
 
 /**
@@ -70,6 +84,25 @@
  *     responses:
  *       204:
  *         description: Token successfully revoked
+ *       401:
+ *         description: Token is missing or invalid
+ */
+
+/**
+ * @swagger
+ * /auth/me:
+ *   get:
+ *     summary: Return authenticated user profile
+ *     tags: [Authentication]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Authenticated user profile
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/MeResponse'
  *       401:
  *         description: Token is missing or invalid
  */

@@ -1,3 +1,4 @@
+import { UserRole } from "@/modules/users/domain/models/user-role";
 import { UserModel } from "@/modules/users/domain/models/users.model";
 import { Exclude } from "class-transformer";
 import {
@@ -22,6 +23,9 @@ export class User implements UserModel {
   @Column()
   @Exclude()
   password: string;
+
+  @Column({ type: "varchar" })
+  role: UserRole;
 
   @CreateDateColumn()
   created_at: Date;

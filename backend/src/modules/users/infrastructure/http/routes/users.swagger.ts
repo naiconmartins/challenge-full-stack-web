@@ -8,6 +8,7 @@
  *         - name
  *         - email
  *         - password
+ *         - role
  *       properties:
  *         name:
  *           type: string
@@ -23,6 +24,11 @@
  *           format: password
  *           description: Administrative user password
  *           example: "senha123"
+ *         role:
+ *           type: string
+ *           enum: [ADMIN, ATTENDANT]
+ *           description: User role
+ *           example: ATTENDANT
  *     User:
  *       type: object
  *       properties:
@@ -40,6 +46,11 @@
  *           format: email
  *           description: User email
  *           example: joao.silva@escola.com
+ *         role:
+ *           type: string
+ *           enum: [ADMIN, ATTENDANT]
+ *           description: User role
+ *           example: ATTENDANT
  *         created_at:
  *           type: string
  *           format: date-time

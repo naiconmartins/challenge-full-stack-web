@@ -1,5 +1,6 @@
 import { HashProvider } from "@/common/domain/providers/hash-provider";
 import { inject, injectable } from "tsyringe";
+import { UserRole } from "../../domain/models/user-role";
 import { UsersRepository } from "../../domain/repositories/users.repository";
 import { toUserOutput, UserOutput } from "../dtos/user-output.dto";
 
@@ -8,6 +9,7 @@ export namespace CreateUserUseCase {
     name: string;
     email: string;
     password: string;
+    role: UserRole;
   };
 
   export type Output = UserOutput;
