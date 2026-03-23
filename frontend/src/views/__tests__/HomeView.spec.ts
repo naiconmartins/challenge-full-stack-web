@@ -30,6 +30,7 @@ const mockStudent: Student = {
 
 const mocks = vi.hoisted(() => ({
   fetchStudents: vi.fn(),
+  fetchProfile: vi.fn(),
   search: vi.fn(),
   changePage: vi.fn(),
   openDeleteDialog: vi.fn(),
@@ -45,6 +46,7 @@ const mocks = vi.hoisted(() => ({
   deleteDialog: false,
   selectedStudent: null as Student | null,
   isDeleting: false,
+  userName: 'Maria Oliveira',
 }))
 
 vi.mock('@/composables/students/useStudentList', async () => {
@@ -84,9 +86,15 @@ vi.mock('vue-router', async () => {
   return { ...actual, useRouter: () => ({ push: mocks.routerPush }) }
 })
 
-vi.mock('@/stores/auth.store', () => ({
-  useAuthStore: () => ({ logout: vi.fn() }),
-}))
+vi.mock('@/composables/auth/useAuthProfile', async () => {
+  const { computed } = await import('vue')
+  return {
+    useAuthProfile: () => ({
+      userName: computed(() => mocks.userName),
+      fetchProfile: mocks.fetchProfile,
+    }),
+  }
+})
 
 const vuetify = createVuetify({ components, directives })
 
@@ -108,12 +116,18 @@ describe('HomeView', () => {
     mocks.deleteDialog = false
     mocks.selectedStudent = null
     mocks.isDeleting = false
+    mocks.userName = 'Maria Oliveira'
   })
 
   describe('initial render', () => {
     it('renders the page title "Alunos"', () => {
       const wrapper = mountHome()
       expect(wrapper.text()).toContain('Alunos')
+    })
+
+    it('renders the authenticated user name in the header', () => {
+      const wrapper = mountHome()
+      expect(wrapper.text()).toContain('Olá, Maria Oliveira')
     })
 
     it('renders the StudentSearchBar component', () => {
@@ -136,6 +150,11 @@ describe('HomeView', () => {
     it('calls fetchStudents on mount', () => {
       mountHome()
       expect(mocks.fetchStudents).toHaveBeenCalledOnce()
+    })
+
+    it('calls fetchMe on mount', () => {
+      mountHome()
+      expect(mocks.fetchProfile).toHaveBeenCalledOnce()
     })
 
     it('passes students to StudentTable', () => {

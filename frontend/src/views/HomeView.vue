@@ -2,9 +2,25 @@
   <v-layout class="h-screen overflow-hidden">
     <AppSidebar />
 
-    <v-main class="bg-slate-50 overflow-y-auto pt-20">
+    <v-main class="bg-slate-50 overflow-y-auto">
+      <header class="sticky top-0 z-10 border-b border-slate-200 bg-white">
+        <nav
+          class="max-w-6xl mx-auto flex min-h-16 items-center justify-end gap-4 px-6"
+          aria-label="Barra superior do dashboard"
+        >
+          <div class="flex items-center gap-3 pl-4">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-900 text-sm font-semibold text-white">
+              {{ userName.charAt(0).toUpperCase() || 'U' }}
+            </div>
+            <p class="text-sm font-medium text-slate-700">
+              {{ userName ? `Olá, ${userName}` : 'Olá, usuário' }}
+            </p>
+          </div>
+        </nav>
+      </header>
+
       <div class="max-w-6xl mx-auto px-6 py-8">
-        <div class="mb-6">
+       <div class="mb-6">
           <h1 class="text-2xl font-semibold text-slate-800">Alunos</h1>
           <p class="text-base text-slate-500 mt-1">Gerencie os cadastros de alunos da instituição</p>
         </div>
@@ -53,11 +69,13 @@ import AppSidebar from '@/components/layout/AppSidebar.vue'
 import StudentSearchBar from '@/components/students/StudentSearchBar.vue'
 import StudentTable from '@/components/students/StudentTable.vue'
 import StudentDeleteDialog from '@/components/students/StudentDeleteDialog.vue'
+import { useAuthProfile } from '@/composables/auth/useAuthProfile'
 import { useStudentList } from '@/composables/students/useStudentList'
 import { useStudentActions } from '@/composables/students/useStudentActions'
 import type { Student } from '@/types/student'
 
 const router = useRouter()
+const { userName, fetchProfile } = useAuthProfile()
 
 const {
   students,
@@ -82,7 +100,12 @@ const {
   confirmDelete,
 } = useStudentActions()
 
-onMounted(() => fetchStudents())
+onMounted(async () => {
+  await Promise.allSettled([
+    fetchStudents(),
+    fetchProfile(),
+  ])
+})
 
 function onClear(): void {
   searchTerm.value = ''
