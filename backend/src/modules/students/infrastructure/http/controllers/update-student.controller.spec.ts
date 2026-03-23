@@ -35,7 +35,7 @@ describe("updateStudentController", () => {
       },
       user: {
         id: "user-id-1",
-        role: "ADMIN",
+        role: "ADMINISTRATIVE",
       },
     } as unknown as Request;
     const res = makeResponse();

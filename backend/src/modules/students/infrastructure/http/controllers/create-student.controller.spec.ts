@@ -34,7 +34,7 @@ describe("createStudentController", () => {
       },
       user: {
         id: "user-id-1",
-        role: "ATTENDANT",
+        role: "ADMINISTRATIVE",
       },
     } as Request;
     const res = makeResponse();
