@@ -2,7 +2,9 @@
 
 ## Decisão de arquitetura utilizada
 
-O frontend foi organizado com separação simples de responsabilidades:
+Optei por organizar o frontend com separação de responsabilidades entre camadas mais voltadas à interface, ao fluxo de tela e à integração com a API.
+
+Essa organização foi escolhida para evitar que regras de navegação, estado, componentes visuais e comunicação HTTP ficassem misturados no mesmo lugar. Com isso, cada parte da aplicação fica com um papel mais claro, o que facilita manutenção, testes e evolução do projeto.
 
 - `views/` concentra a composição das telas.
 - `components/` reúne componentes reutilizáveis de interface.
@@ -11,7 +13,7 @@ O frontend foi organizado com separação simples de responsabilidades:
 - `infra/` concentra infraestrutura compartilhada, como o cliente HTTP base.
 - `stores/` mantém estado global de autenticação.
 
-Essa estrutura reduz acoplamento entre interface e integração com API, facilita testes unitários e deixa os fluxos principais mais fáceis de manter.
+Escolhi essa estrutura porque ela reduz acoplamento entre interface e integração com API, facilita testes unitários e deixa os fluxos principais mais fáceis de manter.
 
 ## Lista de bibliotecas de terceiros utilizadas
 
@@ -30,8 +32,8 @@ O desenvolvimento deste desafio foi conduzido diretamente na branch `main`, com 
 ## O que eu melhoraria se tivesse mais tempo
 
 - Adicionaria testes E2E cobrindo login, listagem, criação, edição e exclusão.
-- Melhoraria acessibilidade com revisão mais profunda de foco, contraste e navegação por teclado.
 - Refinaria a experiência de sessão expirada, diferenciando melhor falha de credencial no login e expiração da autenticação durante o uso da aplicação.
+- Adicionaria gestão de usuários administrativos.
 
 ## Quais requisitos obrigatórios não foram entregues
 

@@ -116,6 +116,4 @@ pnpm build-only
 
 ## Observações
 
-- O frontend depende do backend para autenticação, autorização e persistência.
-- O tratamento de expiração de sessão no frontend está centralizado no cliente HTTP.
 - As decisões de arquitetura e observações de entrega estão documentadas em [COMMENTS.md](./COMMENTS.md).
